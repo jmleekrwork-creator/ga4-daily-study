@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GA4 Daily Study</title>
+<meta name="theme-color" content="#2563eb">
+<link rel="manifest" href='data:application/json,{"name":"GA4 Daily Study","short_name":"GA4 Study","start_url":".","display":"standalone","background_color":"%23ffffff","theme_color":"%232563eb","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 rx=%2240%22 fill=%22%232563eb%22/%3E%3Ctext x=%2296%22 y=%22125%22 font-size=%2280%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22%3EG4%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}'>
+<style>
+:root{--bg:#fafafa;--surface:#fff;--surface-2:#f4f4f5;--border:#e4e4e7;--text:#18181b;--text-2:#52525b;--text-3:#a1a1aa;--primary:#2563eb;--primary-soft:#eff6ff;--success:#16a34a;--success-soft:#f0fdf4;--warning:#ea580c;--warning-soft:#fff7ed;--danger:#dc2626;--danger-soft:#fef2f2;--s1:#16a34a;--s2:#ea580c;--s3:#dc2626;--shadow:0 1px 3px rgba(0,0,0,.04),0 1px 2px rgba(0,0,0,.06);--r:8px;--rs:6px;--rl:12px}
+[data-theme="dark"]{--bg:#09090b;--surface:#18181b;--surface-2:#27272a;--border:#27272a;--text:#fafafa;--text-2:#a1a1aa;--text-3:#71717a;--primary:#3b82f6;--primary-soft:#1e3a8a33;--success-soft:#16a34a22;--warning-soft:#ea580c22;--danger-soft:#dc262622;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Apple SD Gothic Neo','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+.topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--primary),#7c3aed);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px}
+.logo-sub{color:var(--text-3);font-weight:500;font-size:12px}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.tabs{display:flex;background:var(--surface-2);border-radius:var(--rs);padding:3px}
+.tab{border:none;background:transparent;padding:6px 12px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;border-radius:4px;transition:all .15s}
+.tab.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.icon-btn{border:1px solid var(--border);background:var(--surface);width:34px;height:34px;border-radius:var(--rs);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .15s;font-size:16px}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.layout{display:flex;min-height:calc(100vh - 57px)}
+.sidebar{width:280px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 0;overflow-y:auto;height:calc(100vh - 57px);position:sticky;top:57px}
+.main{flex:1;padding:32px 48px;max-width:880px;width:100%}
+.sidebar-search{margin:0 16px 16px;position:relative}
+.sidebar-search input{width:100%;padding:7px 10px 7px 30px;border:1px solid var(--border);border-radius:var(--rs);background:var(--bg);color:var(--text);font-size:13px;outline:none}
+.sidebar-search input:focus{border-color:var(--primary)}
+.sidebar-search::before{content:'🔍';position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.5}
+.stage-group{margin-bottom:4px}
+.stage-header{padding:10px 20px 6px;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-3);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.stage-dot{width:6px;height:6px;border-radius:50%}
+.stage-1 .stage-dot{background:var(--s1)}
+.stage-2 .stage-dot{background:var(--s2)}
+.stage-3 .stage-dot{background:var(--s3)}
+.chapter-item{padding:8px 20px;cursor:pointer;font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:10px;border-left:2px solid transparent;transition:all .15s}
+.chapter-item:hover{background:var(--surface-2);color:var(--text)}
+.chapter-item.active{background:var(--primary-soft);color:var(--primary);border-left-color:var(--primary);font-weight:500}
+.chapter-num{width:22px;height:22px;border-radius:50%;background:var(--surface-2);color:var(--text-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.chapter-item.active .chapter-num{background:var(--primary);color:#fff}
+.chapter-item.completed .chapter-num{background:var(--success);color:#fff}
+.chapter-title{flex:1;line-height:1.3}
+.progress-bar-wrap{margin:8px 16px 16px;padding:10px 14px;background:var(--surface-2);border-radius:var(--rs)}
+.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-2);margin-bottom:6px}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);transition:width .3s}
+.breadcrumb{font-size:12px;color:var(--text-3);margin-bottom:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.stage-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-1{background:var(--success-soft);color:var(--s1)}
+.badge-2{background:var(--warning-soft);color:var(--s2)}
+.badge-3{background:var(--danger-soft);color:var(--s3)}
+h1{font-size:26px;font-weight:700;margin-bottom:8px;line-height:1.3}
+h2{font-size:19px;font-weight:600;margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+h3{font-size:16px;font-weight:600;margin:20px 0 8px}
+p{color:var(--text-2);margin-bottom:12px}
+.goals{background:var(--primary-soft);border-radius:var(--r);padding:16px 20px;margin:20px 0;border-left:3px solid var(--primary)}
+.goals-title{font-weight:600;color:var(--primary);margin-bottom:8px;font-size:13px}
+.goals ul{list-style:none;padding:0}
+.goals li{color:var(--text);font-size:14px;padding:3px 0 3px 20px;position:relative}
+.goals li::before{content:'🎯';position:absolute;left:0;font-size:11px}
+.concept-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin:14px 0}
+.analogy{background:var(--warning-soft);border-radius:var(--r);padding:14px 18px;margin:12px 0;font-size:14px}
+.analogy strong{color:var(--warning)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--surface-2);font-weight:600;font-size:13px}
+tr:last-child td{border-bottom:none}
+.diagram{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin:18px 0;text-align:center}
+.flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.flow-step{background:var(--primary-soft);color:var(--primary);padding:9px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;border:1px solid var(--primary)}
+.flow-arrow{color:var(--text-3);font-size:18px}
+.practical{background:var(--success-soft);border-radius:var(--r);padding:16px 20px;margin:16px 0;border-left:3px solid var(--success)}
+.practical-title{font-weight:600;color:var(--success);margin-bottom:8px;font-size:13px}
+.checkpoint{background:var(--surface);border:2px dashed var(--border);border-radius:var(--r);padding:18px;margin:22px 0}
+.checkpoint-title{font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.check-q{padding:9px 0;border-top:1px solid var(--border);font-size:14px}
+.check-q:first-of-type{border-top:none;padding-top:0}
+.sources{background:var(--surface-2);border-radius:var(--r);padding:14px 18px;margin:24px 0;font-size:12px}
+.sources-title{font-weight:600;color:var(--text-2);margin-bottom:6px;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.sources a{color:var(--primary);text-decoration:none;display:block;padding:2px 0}
+.sources a:hover{text-decoration:underline}
+.disclaimer{background:var(--surface-2);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--text-3);margin:16px 0;line-height:1.5}
+.action-bar{margin-top:36px;padding-top:24px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{padding:9px 16px;border-radius:var(--rs);font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--surface-2)}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:#1d4ed8}
+.btn-success{background:var(--success);color:#fff;border-color:var(--success)}
+.btn-success:hover{opacity:.9}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.quiz-home{max-width:600px;margin:32px auto;padding:0 16px}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:28px;box-shadow:var(--shadow)}
+.quiz-date{font-size:13px;color:var(--text-3);margin-bottom:4px}
+.quiz-greeting{font-size:22px;font-weight:700;margin-bottom:4px}
+.quiz-streak{display:inline-flex;align-items:center;gap:6px;background:var(--warning-soft);color:var(--warning);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;margin-top:12px}
+.quiz-today-info{background:var(--surface-2);border-radius:var(--r);padding:16px;margin:20px 0}
+.quiz-today-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
+.quiz-today-chapter{font-size:16px;font-weight:600;margin-top:4px}
+.quiz-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.stat-card{background:var(--surface-2);border-radius:var(--r);padding:14px;text-align:center}
+.stat-num{font-size:22px;font-weight:700}
+.stat-label{font-size:11px;color:var(--text-3);margin-top:2px}
+.quiz-progress{display:flex;gap:4px;margin-bottom:24px}
+.quiz-progress-bar{flex:1;height:4px;background:var(--surface-2);border-radius:2px}
+.quiz-progress-bar.active{background:var(--primary)}
+.quiz-progress-bar.correct{background:var(--success)}
+.quiz-progress-bar.wrong{background:var(--danger)}
+.quiz-q-num{font-size:12px;color:var(--text-3);margin-bottom:8px}
+.quiz-q-text{font-size:17px;font-weight:600;margin-bottom:20px;line-height:1.5}
+.quiz-options{display:flex;flex-direction:column;gap:8px}
+.quiz-option{padding:14px 16px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);cursor:pointer;transition:all .15s;font-size:14px;text-align:left;color:var(--text);display:flex;align-items:flex-start;gap:10px}
+.quiz-option:hover:not(:disabled){border-color:var(--primary);background:var(--primary-soft)}
+.quiz-option-letter{width:22px;height:22px;border-radius:50%;background:var(--surface-2);color:var(--text-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.quiz-option.correct{border-color:var(--success);background:var(--success-soft)}
+.quiz-option.correct .quiz-option-letter{background:var(--success);color:#fff}
+.quiz-option.wrong{border-color:var(--danger);background:var(--danger-soft)}
+.quiz-option.wrong .quiz-option-letter{background:var(--danger);color:#fff}
+.quiz-option:disabled{cursor:default}
+.quiz-explanation{margin-top:16px;padding:16px;background:var(--surface-2);border-radius:var(--r);font-size:14px;line-height:1.6}
+.quiz-explanation-title{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.quiz-result-score{text-align:center;padding:20px 0}
+.score-num{font-size:60px;font-weight:800;background:linear-gradient(135deg,var(--primary),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.score-label{color:var(--text-2);font-size:14px}
+.review-list{margin:20px 0;display:flex;flex-direction:column;gap:10px}
+.review-item{padding:12px 14px;border-radius:var(--r);background:var(--surface-2);font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.review-icon{flex-shrink:0}
+.stats-view{max-width:720px;margin:32px auto;padding:0 24px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:20px 0}
+.big-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.big-stat-num{font-size:26px;font-weight:700}
+.big-stat-label{font-size:12px;color:var(--text-3);margin-top:4px}
+.section-title{font-size:14px;font-weight:600;color:var(--text-2);margin:24px 0 10px}
+.recent-days{display:flex;gap:4px;margin:14px 0}
+.day-cell{flex:1;aspect-ratio:1;background:var(--surface-2);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:var(--text-3);min-width:0}
+.day-cell.studied{background:var(--success-soft)}
+.day-cell.studied strong{color:var(--success);font-size:14px}
+.weak-list{display:flex;flex-direction:column;gap:8px}
+.weak-item{padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);font-size:13px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.weak-item:hover{background:var(--surface-2)}
+.weak-rate{color:var(--danger);font-weight:600}
+.welcome{text-align:center;padding:50px 20px}
+.welcome-emoji{font-size:52px;margin-bottom:16px}
+.welcome-title{font-size:22px;font-weight:700;margin-bottom:8px}
+.welcome-text{color:var(--text-2);max-width:480px;margin:0 auto 24px}
+.empty-state{text-align:center;padding:30px;color:var(--text-3);font-size:13px}
+@media (max-width:768px){
+  .layout{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;max-height:240px}
+  .main{padding:20px}
+  h1{font-size:21px}
+  .topbar{padding:10px 14px}
+  .logo-sub{display:none}
+  .quiz-card{padding:20px}
+  .tab{padding:6px 10px;font-size:12px}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">G4</div>
+    <div>GA4 Daily Study <span class="logo-sub">· 매일 5분 학습</span></div>
+  </div>
+  <div class="topbar-actions">
+    <div class="tabs">
+      <button class="tab active" data-tab="learn" onclick="switchTab('learn')">📚 학습</button>
+      <button class="tab" data-tab="quiz" onclick="switchTab('quiz')">⚡ 퀴즈</button>
+      <button class="tab" data-tab="stats" onclick="switchTab('stats')">📊 기록</button>
+    </div>
+    <button class="icon-btn" onclick="toggleTheme()" title="테마">🌓</button>
+  </div>
+</div>
+
+<div class="layout" id="learnView">
+  <aside class="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="chapterSearch" placeholder="용어·챕터 검색..." oninput="filterChapters()">
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>학습 진도</span><span id="progressText">0 / 17</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div id="chapterList"></div>
+  </aside>
+  <main class="main" id="chapterContent">
+    <div class="welcome">
+      <div class="welcome-emoji">📊</div>
+      <div class="welcome-title">GA4를 차근차근 시작해볼까요?</div>
+      <div class="welcome-text">왼쪽 메뉴에서 챕터를 선택하세요. 입문 → 실무 → 컨설팅까지 17개 챕터로 단계별 학습이 가능합니다. 매일 아침 5분 퀴즈로 복습할 수도 있어요.</div>
+      <button class="btn btn-primary" onclick="loadChapter(0)">첫 챕터 시작하기 →</button>
+    </div>
+  </main>
+</div>
+
+<div id="quizView" style="display:none;"></div>
+<div id="statsView" style="display:none;"></div>
+
+<script>
+const CHAPTERS=[
+{stage:1,num:1,title:"GA4가 뭐길래? 한 줄 정의",goals:["GA4가 어떤 도구인지 한 문장으로 설명할 수 있다","GA4를 쓰는 이유를 마케팅 관점에서 이해한다","GA4가 수집하는 데이터의 큰 그림을 잡는다"],body:`<h2>한 줄 정의</h2><div class="concept-box"><p><strong>GA4(Google Analytics 4)</strong>는 웹사이트와 앱에서 <strong>"사람들이 무엇을 하는지"</strong>를 자동으로 기록하고 보고서로 보여주는 Google의 무료 분석 도구입니다.</p></div><div class="analogy"><strong>🏪 비유로 이해하기 —</strong> GA4는 매장에 달린 CCTV + 영수증 시스템이에요. 누가 들어왔는지(사용자), 어디를 둘러봤는지(페이지), 무엇을 집어들었는지(이벤트), 결국 샀는지(전환)를 모두 기록합니다.</div><h2>왜 필요한가요?</h2><p>광고를 돌리거나 콘텐츠를 만들 때, "이게 효과 있나?"를 <strong>감이 아닌 데이터</strong>로 답하려면 분석 도구가 필요합니다. GA4가 그 표준 도구예요.</p><table><tr><th>질문</th><th>GA4가 답해주는 것</th></tr><tr><td>사람들이 어디서 우리 사이트로 오나?</td><td>유입 경로 분석</td></tr><tr><td>들어온 뒤 뭘 하지?</td><td>페이지·이벤트 분석</td></tr><tr><td>광고비 쓴 만큼 효과 있나?</td><td>전환·매출 분석</td></tr><tr><td>어떤 페이지에서 이탈하지?</td><td>참여율·이탈 페이지 분석</td></tr></table><h2>GA4가 다른 분석 도구와 다른 점</h2><ul style="margin-left:20px;color:var(--text-2)"><li><strong>이벤트 기반 모델</strong>: 모든 행동(클릭·스크롤·구매)을 똑같은 "이벤트"로 다룸</li><li><strong>웹 + 앱 통합</strong>: 웹사이트와 모바일 앱을 한 도구로 분석</li><li><strong>무료</strong>: Google 계정만 있으면 누구나 사용 가능</li><li><strong>머신러닝 인사이트</strong>: 자동 예측·추천 기능 제공</li></ul><div class="practical"><div class="practical-title">💼 NHN AD DX 컨설팅 관점</div>광고주에게 "왜 GA4를 봐야 하나요?"라는 질문을 받으면 → "광고비를 쓴 결과가 실제 사이트 행동으로 이어지는지 객관적으로 측정하는 표준 도구이며, Google Ads와 자연스럽게 연동되어 캠페인 최적화 인사이트를 얻을 수 있다"라고 답할 수 있어야 합니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. GA4를 한 문장으로 설명할 수 있나요?</div><div class="check-q">2. GA4와 비슷한 다른 분석 도구를 1개 이상 말할 수 있나요?</div><div class="check-q">3. 광고주가 "굳이 왜 써야 해요?"라고 물으면 어떻게 답할 건가요?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/10089681" target="_blank" rel="noopener">[GA4] Introducing the next generation of Analytics</a><a href="https://support.google.com/analytics/answer/9304153" target="_blank" rel="noopener">[GA4] Get started with Google Analytics</a></div>`},
+
+{stage:1,num:2,title:"핵심 용어 사전 (꼭 알아야 할 7개)",goals:["사용자·세션·이벤트·매개변수의 차이를 구분한다","GA4에서 자주 쓰는 용어 7개의 의미를 정확히 안다","용어 간 관계를 트리 구조로 이해한다"],body:`<h2>이 7개만 알면 70%는 끝</h2><p>GA4 보고서에 매번 등장하는 핵심 용어입니다. 외우려 하지 말고 <strong>관계</strong>로 이해하세요.</p><div class="diagram"><div class="flow"><div class="flow-step">사용자 (User)</div><span class="flow-arrow">→</span><div class="flow-step">세션 (Session)</div><span class="flow-arrow">→</span><div class="flow-step">이벤트 (Event)</div><span class="flow-arrow">→</span><div class="flow-step">매개변수 (Parameter)</div></div><p style="margin-top:12px;font-size:13px;color:var(--text-3)">한 명의 사용자가 여러 세션을 만들고, 한 세션 안에 여러 이벤트가 발생하며, 각 이벤트는 매개변수를 갖는다.</p></div><table><tr><th>용어</th><th>한 줄 정의</th><th>일상 비유</th></tr><tr><td><strong>사용자 (User)</strong></td><td>고유한 방문자 1명</td><td>매장 손님 1명</td></tr><tr><td><strong>세션 (Session)</strong></td><td>한 번의 방문 단위 (기본 30분 무활동 시 종료)</td><td>매장 1회 방문</td></tr><tr><td><strong>이벤트 (Event)</strong></td><td>사용자가 한 모든 행동</td><td>매장에서 한 동작</td></tr><tr><td><strong>매개변수 (Parameter)</strong></td><td>이벤트의 부가 정보</td><td>"어떤 상품을 봤나"의 상품명</td></tr><tr><td><strong>주요 이벤트 (Key Event)</strong></td><td>비즈니스적으로 중요한 이벤트 (예전 명칭: 전환)</td><td>"실제 구매한 행동"</td></tr><tr><td><strong>참여율 (Engagement Rate)</strong></td><td>의미 있는 방문의 비율</td><td>"진지하게 둘러본 손님 비율"</td></tr><tr><td><strong>측정기준/측정항목</strong></td><td>분석의 카테고리 / 숫자값</td><td>"국가별(기준) 매출(항목)"</td></tr></table><div class="analogy"><strong>🍕 피자 가게 비유 —</strong> 김지민(사용자)이 화요일에 가게를 방문(세션 1)했다가 저녁에 또 방문(세션 2)했다. 두 번째 방문에서 메뉴를 보고(이벤트), 페퍼로니 피자를(매개변수) 주문해서 결제(주요 이벤트)했다.</div><h3>참여율(Engagement Rate)이 중요한 이유</h3><p>UA(이전 버전)에서 쓰던 <strong>이탈률(Bounce Rate)</strong>은 "1페이지만 보고 나간 비율"이라 부정적 지표였습니다. GA4는 반대로 <strong>참여율</strong>(긍정적 지표)을 씁니다.</p><p style="background:var(--surface-2);padding:12px;border-radius:var(--rs);font-size:14px"><strong>참여 세션 = 다음 중 하나 이상 만족</strong><br>① 10초 이상 머무름 / ② 주요 이벤트 발생 / ③ 페이지뷰 2회 이상</p><div class="practical"><div class="practical-title">💼 컨설팅 시 자주 받는 질문</div>광고주: "왜 GA4 이탈률이 UA보다 낮게 나와요?" → "GA4의 이탈률은 '참여율의 반대'로 정의가 달라졌기 때문이며, 더 정확한 사용자 행동을 반영합니다."</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 한 사용자가 같은 날 사이트를 3번 따로 방문했다면 세션은 몇 개?</div><div class="check-q">2. 페이지뷰는 이벤트인가요, 사용자인가요?</div><div class="check-q">3. 주요 이벤트(Key Event)의 예전 이름은?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9143382" target="_blank" rel="noopener">[GA4] Sessions</a><a href="https://support.google.com/analytics/answer/12253918" target="_blank" rel="noopener">[GA4] Engagement rate and bounce rate</a><a href="https://support.google.com/analytics/answer/9322688" target="_blank" rel="noopener">[GA4] Key events</a></div>`},
+
+{stage:1,num:3,title:"GA4 인터페이스 투어 (4개 메뉴)",goals:["GA4 화면의 4가지 주요 영역을 안다","각 메뉴에서 무엇을 할 수 있는지 구분한다","보고서가 어디에 있는지 길을 잃지 않는다"],body:`<h2>GA4 화면 구조</h2><p>처음 들어가면 메뉴가 많아 보이지만, 실제로 자주 쓰는 건 <strong>4개</strong>입니다.</p><div class="diagram"><div class="flow"><div class="flow-step">📊 보고서</div><div class="flow-step">🔍 탐색</div><div class="flow-step">📣 광고</div><div class="flow-step">⚙️ 관리자</div></div></div><table><tr><th>메뉴</th><th>하는 일</th><th>언제 쓰나?</th></tr><tr><td><strong>보고서</strong></td><td>미리 만들어진 표준 보고서 보기</td><td>일상적인 모니터링</td></tr><tr><td><strong>탐색</strong></td><td>내가 직접 분석 보고서 만들기</td><td>특정 가설 검증·심층 분석</td></tr><tr><td><strong>광고</strong></td><td>광고 효과·기여도 분석</td><td>Google Ads 연동 시</td></tr><tr><td><strong>관리자</strong></td><td>설정·이벤트·연동 관리</td><td>초기 세팅·이벤트 추가 시</td></tr></table><h2>📊 보고서 메뉴 안의 5가지 컬렉션</h2><ol style="margin-left:20px;color:var(--text-2)"><li><strong>보고서 개요</strong> — 한 화면 요약 대시보드</li><li><strong>실시간</strong> — 지금 이 순간 누가 뭘 하는지</li><li><strong>수명 주기 (Life cycle)</strong> — 획득·참여·수익화·유지 ← 가장 자주 봄</li><li><strong>사용자 (User)</strong> — 인구통계·기술 정보</li><li><strong>라이브러리</strong> — 보고서 커스터마이징</li></ol><div class="analogy"><strong>🏥 병원 비유 —</strong> 보고서 = 정기 건강검진(미리 정해진 항목), 탐색 = 의사가 의심되는 부분 정밀검사, 광고 = 처방한 약 효과 추적, 관리자 = 환자 차트 관리.</div><div class="practical"><div class="practical-title">💼 실무 팁</div>광고주에게 GA4 화면을 처음 보여줄 때는 → 보고서 개요 → 트래픽 획득 → 참여 페이지 → 주요 이벤트 순서로 보여주면 자연스러운 스토리가 됩니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 새로운 이벤트를 만들고 싶다면 어느 메뉴로?</div><div class="check-q">2. "지금 사이트에 몇 명이 있지?" 궁금하면 어디로?</div><div class="check-q">3. 표준 보고서로 답이 안 나오는 분석은 어디서?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9212670" target="_blank" rel="noopener">[GA4] Reports overview</a><a href="https://support.google.com/analytics/answer/9327972" target="_blank" rel="noopener">[GA4] Get started with Explorations</a></div>`},
+
+{stage:1,num:4,title:"UA vs GA4 — 결정적 차이",goals:["왜 UA가 사라지고 GA4가 표준이 되었는지 이해한다","두 도구의 데이터 모델 차이를 안다","UA 시절 보던 지표가 GA4에서 어떻게 바뀌었는지 안다"],body:`<h2>UA는 이미 종료됐어요</h2><p><strong>Universal Analytics(UA)는 2023년 7월 1일 데이터 수집 중단</strong>, 이후 GA4가 유일한 표준입니다. 다만 광고주 중에는 아직 UA 시절 사고방식을 가진 분들이 많아 차이를 정확히 설명할 수 있어야 합니다.</p><h2>가장 큰 차이: 데이터 모델</h2><table><tr><th>구분</th><th>UA (예전)</th><th>GA4 (현재)</th></tr><tr><td><strong>데이터 모델</strong></td><td>세션 기반</td><td>이벤트 기반</td></tr><tr><td><strong>측정 대상</strong></td><td>페이지뷰 중심</td><td>모든 상호작용 (클릭·스크롤·구매 모두 동일)</td></tr><tr><td><strong>플랫폼</strong></td><td>웹 / 앱 분리</td><td>웹·앱 통합</td></tr><tr><td><strong>핵심 지표</strong></td><td>이탈률</td><td>참여율</td></tr><tr><td><strong>전환 정의</strong></td><td>목표(Goal) — 최대 20개</td><td>주요 이벤트 — 무제한, 클릭 한 번</td></tr><tr><td><strong>BigQuery 연동</strong></td><td>유료 (GA360만)</td><td>무료</td></tr></table><h2>이벤트 기반 모델이 뭔데요?</h2><div class="diagram"><p style="font-size:14px;color:var(--text-3);margin-bottom:12px"><strong>UA</strong>는 카테고리·액션·라벨로 구분된 별개 히트 타입을 썼지만,</p><p style="font-size:14px;color:var(--text-3);margin-bottom:16px"><strong>GA4</strong>는 모든 행동을 "이벤트 + 매개변수"로 통일했어요.</p><div class="flow"><div class="flow-step">page_view</div><div class="flow-step">click</div><div class="flow-step">scroll</div><div class="flow-step">purchase</div></div><p style="margin-top:12px;font-size:13px;color:var(--text-3)">↑ 모두 같은 "이벤트"입니다. 각자 다른 매개변수를 가질 뿐.</p></div><div class="analogy"><strong>📦 비유 —</strong> UA는 우체국에 "엽서·소포·등기" 등 종류별 창구가 따로 있었어요. GA4는 모든 게 "택배 한 종류"인데 송장(매개변수)에 내용물·무게·배송지를 자유롭게 적습니다.</div><h2>UA 시절 지표 → GA4 대응</h2><table><tr><th>UA</th><th>GA4</th><th>비고</th></tr><tr><td>이탈률</td><td>참여율의 반대</td><td>정의 다름</td></tr><tr><td>목표 (Goal)</td><td>주요 이벤트</td><td>제한 없음</td></tr><tr><td>세션</td><td>세션</td><td>GA4 세션이 보통 더 적게 잡힘</td></tr><tr><td>페이지뷰</td><td>page_view 이벤트</td><td>이벤트의 한 종류</td></tr><tr><td>이벤트(카테고리·액션·라벨)</td><td>이벤트 + 매개변수</td><td>구조가 자유로워짐</td></tr></table><div class="practical"><div class="practical-title">💼 컨설팅 핵심 멘트</div>"GA4와 UA는 수치가 정확히 일치하지 않습니다. 데이터 모델이 다르기 때문이며, 두 도구의 숫자를 일대일 비교하는 것은 의미가 없습니다. GA4 기준으로 새로운 베이스라인을 세우는 것을 권장드립니다."</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. UA가 데이터 수집을 중단한 시점은?</div><div class="check-q">2. UA의 "이탈률"이 GA4에서는 어떻게 바뀌었나요?</div><div class="check-q">3. 광고주가 "UA에선 전환 100건이었는데 GA4에선 80건이에요" 한다면?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/11986666" target="_blank" rel="noopener">[GA4] Compare GA4 to Universal Analytics</a></div>`},
+
+{stage:1,num:5,title:"데이터 흐름 — 수집부터 보고까지",goals:["데이터가 GA4에 도달하는 4단계를 안다","각 단계에서 무엇이 일어나는지 이해한다","데이터가 안 보일 때 어디서 문제가 생긴 건지 짚어낸다"],body:`<h2>데이터의 여정 4단계</h2><div class="diagram"><div class="flow"><div class="flow-step">① 발생</div><span class="flow-arrow">→</span><div class="flow-step">② 수집</div><span class="flow-arrow">→</span><div class="flow-step">③ 처리</div><span class="flow-arrow">→</span><div class="flow-step">④ 보고</div></div></div><h3>① 발생 (사용자 행동)</h3><p>방문자가 페이지를 보거나 버튼을 누름. 브라우저가 그 행동을 감지합니다.</p><h3>② 수집 (태그 발사)</h3><p>사이트에 심어둔 <strong>Google 태그(gtag.js)</strong> 또는 <strong>Google Tag Manager(GTM)</strong>가 행동을 감지해 GA4 서버로 데이터를 전송합니다.</p><h3>③ 처리 (Google 서버)</h3><p>GA4 서버가 받은 데이터를 정제·집계하고, 측정기준·측정항목 형태로 가공합니다. <strong>이 단계에서 24~48시간 지연</strong>이 생기기도 합니다.</p><h3>④ 보고 (대시보드)</h3><p>가공된 데이터가 GA4 보고서·탐색 분석에 시각화되어 표시됩니다.</p><div class="analogy"><strong>📮 우편 시스템 비유 —</strong> 손님이 편지를 씀(발생) → 우체통에 넣음(수집) → 우체국에서 분류(처리) → 받는 사람에게 도착(보고).</div><h2>실시간(Realtime) vs 표준 보고서</h2><table><tr><th>구분</th><th>실시간 보고서</th><th>표준 보고서</th></tr><tr><td>지연 시간</td><td>거의 없음 (수 초)</td><td>최대 24~48시간</td></tr><tr><td>표시 기간</td><td>최근 30분</td><td>맞춤 설정 가능</td></tr><tr><td>용도</td><td>설정 검증·당장 확인</td><td>분석·보고</td></tr></table><div class="practical"><div class="practical-title">💼 흔한 트러블슈팅</div>"GA4에 데이터가 안 보여요" → 실시간 보고서에서 먼저 확인 → 안 보이면 ② 수집 단계 문제 (태그 미설치/설정 오류) / 실시간엔 보이는데 표준엔 안 보임 → 처리 지연일 가능성 큼 (24시간 대기).</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 새로 설치한 태그가 잘 작동하는지 가장 빨리 확인하는 방법은?</div><div class="check-q">2. 어제 수정한 이벤트 데이터가 표준 보고서에 안 보이면?</div><div class="check-q">3. 데이터 수집 단계에서 가장 자주 쓰는 도구 2가지는?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9271392" target="_blank" rel="noopener">[GA4] Realtime report</a><a href="https://support.google.com/analytics/answer/11198161" target="_blank" rel="noopener">[GA4] Data freshness</a></div>`},
+
+{stage:2,num:6,title:"표준 보고서 읽는 법 (수명 주기 4단계)",goals:["획득·참여·수익화·유지 4단계의 의미를 안다","각 보고서에서 어떤 질문에 답할 수 있는지 안다","사용자 여정을 보고서로 따라 읽을 수 있다"],body:`<h2>수명 주기(Life Cycle) = 사용자 여정</h2><p>사람이 우리 사이트를 알게 되고 → 둘러보고 → 사고 → 다시 오는 흐름을 GA4는 4단계로 나눠 보여줍니다.</p><div class="diagram"><div class="flow"><div class="flow-step">📥 획득</div><span class="flow-arrow">→</span><div class="flow-step">👀 참여</div><span class="flow-arrow">→</span><div class="flow-step">💰 수익화</div><span class="flow-arrow">→</span><div class="flow-step">🔁 유지</div></div></div><h2>① 획득 (Acquisition) — "어떻게 찾아왔나?"</h2><table><tr><th>하위 보고서</th><th>답해주는 질문</th></tr><tr><td>사용자 획득</td><td>이 사용자가 <strong>처음</strong> 우리를 알게 된 경로는?</td></tr><tr><td>트래픽 획득</td><td><strong>이 세션</strong>이 시작된 경로는? (재방문 포함)</td></tr></table><div class="analogy"><strong>차이 비유 —</strong> 사용자 획득 = "처음 결혼한 배우자" / 트래픽 획득 = "오늘 만난 사람"</div><h2>② 참여 (Engagement) — "들어와서 뭘 하나?"</h2><table><tr><th>하위 보고서</th><th>용도</th></tr><tr><td>이벤트</td><td>모든 행동 통계</td></tr><tr><td>전환수 (주요 이벤트)</td><td>비즈니스적으로 중요한 이벤트만</td></tr><tr><td>페이지 및 화면</td><td>인기 페이지·이탈 페이지</td></tr><tr><td>방문 페이지</td><td>첫 진입 페이지 분석 (랜딩페이지)</td></tr></table><h2>③ 수익화 (Monetization) — "얼마 벌었나?"</h2><p>이커머스를 운영할 때 핵심. 매출·구매·결제 단계 분석.</p><table><tr><th>하위 보고서</th><th>용도</th></tr><tr><td>전자상거래 구매</td><td>상품별 매출·구매 횟수</td></tr><tr><td>구매 여정</td><td>어느 단계에서 이탈하는지</td></tr><tr><td>결제 여정</td><td>결제 단계별 전환율</td></tr></table><h2>④ 유지 (Retention) — "다시 왔나?"</h2><p>한 번 온 사람이 며칠 뒤 다시 오는지 분석. 첫 방문 후 <strong>최대 42일</strong>간 재방문 패턴을 보여줍니다.</p><div class="practical"><div class="practical-title">💼 컨설팅 시 흐름</div>① 트래픽 획득 → 어디서 오는지 ② 참여 → 들어와서 뭘 하는지 ③ 주요 이벤트 → 비즈니스 임팩트 ④ 유지 → 재방문 가치. 이 흐름이 그대로 컨설팅 보고서 목차가 됩니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. "어제 광고로 사람들이 처음 들어왔다"는 어느 보고서로?</div><div class="check-q">2. 사용자 획득과 트래픽 획득의 차이는?</div><div class="check-q">3. 유지 보고서는 며칠까지의 재방문을 보여주나요?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9744778" target="_blank" rel="noopener">[GA4] Acquisition reports</a><a href="https://support.google.com/analytics/answer/11004084" target="_blank" rel="noopener">[GA4] Retention overview</a></div>`},
+
+{stage:2,num:7,title:"이벤트 4종 세트 (자동·향상된 측정·추천·맞춤)",goals:["GA4 이벤트의 4가지 종류를 구분한다","각 종류가 자동인지 설정 필요인지 안다","비즈니스 목적에 맞는 이벤트를 선택할 수 있다"],body:`<h2>GA4 이벤트는 4종류</h2><table><tr><th>유형</th><th>설정 필요?</th><th>예시</th></tr><tr><td><strong>① 자동 수집 이벤트</strong></td><td>❌ 없음</td><td>first_visit, session_start, user_engagement</td></tr><tr><td><strong>② 향상된 측정 이벤트</strong></td><td>✅ 토글 ON 한 번</td><td>page_view, scroll, click, file_download</td></tr><tr><td><strong>③ 추천 이벤트</strong></td><td>✅ 직접 구현 (이름 정해짐)</td><td>login, sign_up, purchase, search</td></tr><tr><td><strong>④ 맞춤 이벤트</strong></td><td>✅ 직접 구현 (이름 자유)</td><td>cta_click, demo_request 등</td></tr></table><h3>① 자동 수집 이벤트</h3><p>GA4 태그만 깔면 자동으로 잡힘.</p><ul style="margin-left:20px;color:var(--text-2)"><li><code>first_visit</code> — 첫 방문</li><li><code>session_start</code> — 세션 시작</li><li><code>user_engagement</code> — 의미 있는 참여</li></ul><h3>② 향상된 측정 (Enhanced Measurement) 이벤트</h3><p>관리자 → 데이터 스트림 → 향상된 측정 토글로 켜면 자동 수집.</p><ul style="margin-left:20px;color:var(--text-2)"><li><code>page_view</code> — 페이지 조회</li><li><code>scroll</code> — 페이지 90% 스크롤</li><li><code>click</code> — 외부 링크 클릭</li><li><code>view_search_results</code> — 사이트 내 검색</li><li><code>video_start / video_progress / video_complete</code> — YouTube 임베드</li><li><code>file_download</code> — 파일 다운로드</li></ul><h3>③ 추천 이벤트 (Recommended Events)</h3><p>Google이 표준 이름·매개변수로 가이드하는 이벤트. 업종별로 다름.</p><table><tr><th>업종</th><th>주요 추천 이벤트</th></tr><tr><td>전체</td><td>login, sign_up, search, share</td></tr><tr><td>이커머스</td><td>view_item, add_to_cart, begin_checkout, purchase</td></tr><tr><td>리드 생성</td><td>generate_lead, qualify_lead</td></tr></table><div class="analogy"><strong>왜 추천 이벤트를 써야 하나? —</strong> 표준 이름을 쓰면 GA4가 자동으로 보고서에 예쁘게 정리해줘요. 직접 만든 이름은 표준 보고서에 안 나오고 별도 설정이 필요합니다.</div><h3>④ 맞춤 이벤트 (Custom Events)</h3><p style="background:var(--surface-2);padding:12px;border-radius:var(--rs);font-size:13px">💡 <strong>이벤트 이름 규칙</strong>: 40자 이하, 영문 소문자 + 숫자 + 언더스코어. 예: <code>cta_click_main_banner</code></p><div class="practical"><div class="practical-title">💼 컨설팅 체크리스트</div>① 향상된 측정이 켜져 있는지 → ② 비즈니스 핵심 액션이 추천 이벤트로 잡혀 있는지 → ③ 부족한 부분만 맞춤 이벤트로 보완. 무작정 맞춤 이벤트를 늘리지 않는 게 원칙입니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 별도 설정 없이 자동으로 잡히는 이벤트의 예시 1개?</div><div class="check-q">2. 토글 한 번으로 켤 수 있는 이벤트 묶음의 이름은?</div><div class="check-q">3. 이커머스에서 결제 시작을 추적하는 추천 이벤트 이름은?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9234069" target="_blank" rel="noopener">[GA4] Automatically collected events</a><a href="https://support.google.com/analytics/answer/9216061" target="_blank" rel="noopener">[GA4] Enhanced measurement events</a><a href="https://support.google.com/analytics/answer/9267735" target="_blank" rel="noopener">[GA4] Recommended events</a></div>`},
+
+{stage:2,num:8,title:"주요 이벤트(Key Events) 설정",goals:["주요 이벤트가 무엇인지 안다","기존 이벤트를 주요 이벤트로 표시하는 절차를 안다","광고주의 비즈니스 목표에 맞는 주요 이벤트를 추천할 수 있다"],body:`<h2>주요 이벤트(Key Event)란?</h2><p>"이건 우리 비즈니스에 결정적이야"라고 표시한 이벤트. <strong>예전엔 "전환(Conversion)"이라 불렀지만 2024년 명칭이 변경</strong>됐습니다.</p><div class="concept-box"><p>📌 <strong>모든 주요 이벤트는 이벤트지만, 모든 이벤트가 주요 이벤트는 아닙니다.</strong></p><p>page_view, scroll 같은 일상적 이벤트는 주요 이벤트가 아니에요. purchase, sign_up처럼 비즈니스 가치가 있는 행동만 표시합니다.</p></div><h2>설정 방법 (3단계)</h2><ol style="margin-left:20px;color:var(--text-2)"><li>관리자 → 데이터 표시 → 주요 이벤트</li><li>"새 주요 이벤트" 또는 기존 이벤트 옆 토글 ON</li><li>최대 24시간 후 보고서 반영</li></ol><h2>업종별 추천 주요 이벤트</h2><table><tr><th>업종</th><th>주요 이벤트 후보</th></tr><tr><td>이커머스</td><td>purchase, add_to_cart, begin_checkout</td></tr><tr><td>리드 생성 (B2B)</td><td>generate_lead, contact, sign_up</td></tr><tr><td>콘텐츠 사이트</td><td>newsletter_signup, article_read_complete</td></tr><tr><td>SaaS</td><td>sign_up, trial_start, subscribe</td></tr><tr><td>앱 설치 유도</td><td>app_install_click, app_open</td></tr></table><div class="analogy"><strong>🏪 매장 비유 —</strong> "들어옴" "구경함" "물어봄" "샀음" 모두 행동이지만, 매장 매출에 직결되는 건 "샀음" 뿐. GA4에선 "샀음"만 ⭐ 표시(주요 이벤트)를 해서 따로 추적합니다.</div><h2>주요 이벤트 카운팅 옵션</h2><table><tr><th>옵션</th><th>설명</th><th>적합한 경우</th></tr><tr><td>이벤트마다 1회</td><td>발생할 때마다 카운트</td><td>구매·결제 (모든 거래 추적)</td></tr><tr><td>세션당 1회</td><td>한 세션에 여러 번 발생해도 1회만</td><td>로그인·뉴스레터 가입</td></tr></table><div class="practical"><div class="practical-title">💼 컨설팅 핵심 질문</div>광고주에게 가장 먼저 물어야 할 질문: <strong>"이 사이트의 가장 중요한 사용자 행동 3가지는 무엇인가요?"</strong> → 그 답이 그대로 주요 이벤트가 됩니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 주요 이벤트의 예전 명칭은?</div><div class="check-q">2. B2B SaaS의 주요 이벤트로 무엇을 추천?</div><div class="check-q">3. "이벤트마다 1회" vs "세션당 1회" 중 구매 추적엔?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9322688" target="_blank" rel="noopener">[GA4] Key events (formerly conversions)</a></div>`},
+
+{stage:2,num:9,title:"잠재고객(Audience)과 세그먼트",goals:["잠재고객과 세그먼트의 차이를 안다","잠재고객을 만드는 절차를 안다","광고 캠페인 타겟팅에 어떻게 연결되는지 이해한다"],body:`<h2>잠재고객 vs 세그먼트</h2><table><tr><th>구분</th><th>잠재고객 (Audience)</th><th>세그먼트 (Segment)</th></tr><tr><td>사용 위치</td><td>관리자 메뉴 (영구)</td><td>탐색 분석 안 (해당 분석에서만)</td></tr><tr><td>지속성</td><td>저장됨, 자동 업데이트</td><td>일회성</td></tr><tr><td>광고 활용</td><td>Google Ads에 내보내기 가능</td><td>불가</td></tr><tr><td>예시</td><td>"3회 이상 방문한 사용자"</td><td>"오늘 분석할 일부 사용자"</td></tr></table><div class="analogy"><strong>📋 비유 —</strong> 잠재고객 = 회원 등급(VIP·Gold·Silver처럼 영구 분류) / 세그먼트 = 오늘만 쓸 임시 명단</div><h2>잠재고객 만드는 법</h2><ol style="margin-left:20px;color:var(--text-2)"><li>관리자 → 데이터 표시 → 잠재고객</li><li>"새 잠재고객" 클릭</li><li>조건 설정 (이벤트·매개변수·사용자 속성 조합)</li><li>이름·설명 입력 후 저장</li></ol><h2>실무에서 자주 쓰는 잠재고객 예시</h2><table><tr><th>이름</th><th>조건</th><th>활용</th></tr><tr><td>고가치 방문자</td><td>3회 이상 세션 + 3분 이상 체류</td><td>리타겟팅 광고</td></tr><tr><td>장바구니 이탈자</td><td>add_to_cart 발생 + purchase 미발생</td><td>장바구니 회수 광고</td></tr><tr><td>구매 완료자</td><td>purchase 1회 이상</td><td>크로스셀·업셀 캠페인</td></tr></table><h2>예측 잠재고객 (Predictive Audience)</h2><p>GA4의 머신러닝이 자동으로 만들어주는 고급 잠재고객.</p><ul style="margin-left:20px;color:var(--text-2)"><li><strong>구매 가능성 높은 사용자</strong></li><li><strong>이탈 가능성 높은 사용자</strong></li><li><strong>예상 지출액 상위 사용자</strong></li></ul><p style="background:var(--surface-2);padding:12px;border-radius:var(--rs);font-size:13px">💡 예측 잠재고객을 쓰려면 <strong>최근 28일간 1,000명 이상의 데이터</strong>가 필요합니다.</p><div class="practical"><div class="practical-title">💼 NHN AD 활용 시나리오</div>광고주 GA4와 Google Ads 연동 → "장바구니 이탈자" 잠재고객 생성 → Google Ads에서 해당 잠재고객만 타겟으로 리타겟팅 → 이탈자 대상 전환율 회수.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 잠재고객과 세그먼트의 가장 큰 차이는?</div><div class="check-q">2. "장바구니에 담았지만 안 산 사람" 잠재고객 조건은?</div><div class="check-q">3. 예측 잠재고객 사용 조건은?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9267572" target="_blank" rel="noopener">[GA4] Audiences</a><a href="https://support.google.com/analytics/answer/9846734" target="_blank" rel="noopener">[GA4] Predictive audiences</a></div>`},
+
+{stage:2,num:10,title:"탐색 분석 (Explore) — 직접 만드는 보고서",goals:["탐색 분석 7가지 템플릿의 용도를 안다","자유형식·유입경로·경로 분석을 구분한다","표준 보고서로 답이 안 나오는 분석을 탐색에서 풀 수 있다"],body:`<h2>탐색 분석이란?</h2><p>표준 보고서가 "정해진 메뉴 정식"이라면, 탐색 분석은 "내 입맛대로 골라 시키는 단품 메뉴"입니다.</p><h2>탐색 분석 7가지 템플릿</h2><table><tr><th>템플릿</th><th>한 줄 용도</th><th>언제 쓰나</th></tr><tr><td><strong>자유 형식</strong></td><td>피벗 테이블 자유 조립</td><td>가장 많이 씀. 거의 모든 분석</td></tr><tr><td><strong>유입경로 탐색</strong></td><td>단계별 이탈 분석</td><td>결제 단계 이탈, 가입 퍼널</td></tr><tr><td><strong>경로 탐색</strong></td><td>사용자 행동 경로 추적</td><td>"홈 → 어디로 가나?" 흐름 파악</td></tr><tr><td><strong>세그먼트 중복 분석</strong></td><td>여러 세그먼트의 교집합</td><td>모바일 + 신규 사용자 같은 교차</td></tr><tr><td><strong>사용자 탐색기</strong></td><td>개별 사용자 행동 추적</td><td>특정 사용자가 뭘 했는지</td></tr><tr><td><strong>코호트 탐색</strong></td><td>동일 시점 가입자 그룹 추적</td><td>1월 가입자의 3개월 후 재방문율</td></tr><tr><td><strong>사용자 평생 가치</strong></td><td>장기 가치 예측</td><td>LTV 분석</td></tr></table><h3>🥇 자유 형식 (Free Form) — 가장 자주 쓰는 템플릿</h3><div class="diagram"><div class="flow"><div class="flow-step">측정기준 (행/열)</div><span class="flow-arrow">+</span><div class="flow-step">측정항목 (값)</div><span class="flow-arrow">=</span><div class="flow-step">맞춤 표</div></div></div><p>예시: 행에 "방문 페이지", 열에 "기기 카테고리", 값에 "참여 세션 수" → 페이지별·기기별 참여 매트릭스 완성</p><h3>🥈 유입경로 탐색 (Funnel)</h3><p>"방문 → 상품 조회 → 장바구니 → 구매" 같은 단계를 정의하고, 각 단계에서 몇 %가 다음 단계로 가는지 시각화. <strong>이탈 단계 발견에 최강</strong>입니다.</p><h3>🥉 경로 탐색 (Path Exploration)</h3><p>"홈에서 시작해서 사람들이 어디로 가는가?" 또는 "구매 직전 페이지는 무엇이었나?"를 트리 형태로 보여줌.</p><div class="practical"><div class="practical-title">💼 컨설팅 핵심 무기</div>대부분의 광고주 인사이트는 <strong>유입경로 탐색</strong>에서 나옵니다. "랜딩페이지 → 상품상세 → 장바구니 → 구매" 4단계 퍼널을 그려보고 어디서 가장 크게 이탈하는지 찾으면 → 그것이 곧 개선 가설이 됩니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. "결제 단계별 이탈률"을 보고 싶다면 어떤 템플릿?</div><div class="check-q">2. "사용자가 홈에서 다음으로 가장 많이 가는 페이지"는?</div><div class="check-q">3. 자유 형식의 핵심 구성 요소 2가지는?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9327972" target="_blank" rel="noopener">[GA4] Get started with Explorations</a><a href="https://support.google.com/analytics/answer/9327974" target="_blank" rel="noopener">[GA4] Funnel exploration</a></div>`},
+
+{stage:2,num:11,title:"측정기준 vs 측정항목 (Dimension vs Metric)",goals:["측정기준과 측정항목의 차이를 안다","둘을 조합해서 보고서를 읽는 법을 안다","범위(Scope) 개념을 이해한다"],body:`<h2>가장 헷갈리는 두 단어, 한 방에 정리</h2><table><tr><th>구분</th><th>측정기준 (Dimension)</th><th>측정항목 (Metric)</th></tr><tr><td>본질</td><td>"누가/어디서/언제" 같은 <strong>속성</strong></td><td>"몇 번/얼마나" 같은 <strong>숫자</strong></td></tr><tr><td>데이터 형태</td><td>문자/카테고리</td><td>숫자/계산값</td></tr><tr><td>예시</td><td>국가, 기기, 페이지 경로, 이벤트 이름</td><td>사용자 수, 세션 수, 매출, 참여율</td></tr><tr><td>역할</td><td>분석의 "축" (행/열)</td><td>분석의 "값" (숫자)</td></tr></table><div class="analogy"><strong>📊 엑셀 비유 —</strong> 측정기준 = 행/열의 라벨("국가", "월") / 측정항목 = 셀 안의 숫자(매출, 방문자 수). 라벨 없이 숫자만 있으면 의미 없고, 숫자 없이 라벨만 있어도 비교 불가.</div><h2>실제 보고서 예시</h2><table><tr><th>국가 (측정기준)</th><th>사용자 (측정항목)</th><th>세션 (측정항목)</th><th>참여율 (측정항목)</th></tr><tr><td>한국</td><td>1,234</td><td>2,345</td><td>72%</td></tr><tr><td>미국</td><td>567</td><td>890</td><td>65%</td></tr><tr><td>일본</td><td>123</td><td>234</td><td>58%</td></tr></table><h2>범위(Scope) 개념</h2><table><tr><th>범위</th><th>의미</th><th>예시</th></tr><tr><td>이벤트 (Event)</td><td>이벤트 단위 속성</td><td>page_location, event_name</td></tr><tr><td>사용자 (User)</td><td>사용자 단위 속성</td><td>처음 사용 매체, 사용자 ID</td></tr><tr><td>세션 (Session)</td><td>세션 단위 속성</td><td>세션 매체, 세션 캠페인</td></tr><tr><td>항목 (Item)</td><td>이커머스 상품 단위</td><td>item_name, item_price</td></tr></table><h2>맞춤 측정기준·측정항목</h2><p>기본 제공으로 부족하면 직접 만들 수 있습니다. <strong>이벤트 매개변수 → 맞춤 측정기준으로 등록</strong>해야 보고서에 나타납니다.</p><p style="background:var(--surface-2);padding:12px;border-radius:var(--rs);font-size:13px">⚠️ 흔한 실수: 매개변수만 보내고 맞춤 측정기준 등록을 안 함 → 보고서에 안 보여서 데이터 누락된 줄 착각.</p><div class="practical"><div class="practical-title">💼 자주 쓰는 조합</div><ul style="margin-left:20px;margin-top:6px"><li>"트래픽 소스(기준) × 주요 이벤트 수(항목)" → 어느 채널이 가장 잘 전환되나?</li><li>"방문 페이지(기준) × 참여율(항목)" → 어느 랜딩이 잘 작동하나?</li><li>"기기(기준) × 평균 세션 시간(항목)" → 모바일/PC 사용 패턴 차이</li></ul></div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. "사용자 수"는 측정기준일까 측정항목일까?</div><div class="check-q">2. "방문 페이지"는?</div><div class="check-q">3. 매개변수를 보냈는데 보고서에 안 나오면 무엇을 확인?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/10075209" target="_blank" rel="noopener">[GA4] Custom dimensions and metrics</a></div>`},
+
+{stage:3,num:12,title:"광고주 GA4 진단 체크리스트",goals:["광고주 GA4 계정을 처음 받았을 때 점검할 항목을 안다","설정 미비로 데이터가 잘못 잡히는 케이스를 발견한다","체크리스트 기반의 진단 보고서를 만든다"],body:`<h2>광고주 GA4 진단 체크리스트 (10항목)</h2><p>새로 맡은 광고주 계정은 반드시 이 10가지를 먼저 점검합니다.</p><h3>① 데이터 스트림 설정</h3><ul style="margin-left:20px;color:var(--text-2)"><li>웹/앱 스트림이 정상 등록됐는가?</li><li>측정 ID(G-XXXXX)가 사이트에 실제로 박혔는가?</li><li>실시간 보고서에 데이터가 들어오는가?</li></ul><h3>② 향상된 측정 토글</h3><p>스크롤·클릭·동영상 등 향상된 측정이 켜져 있는지 확인. <strong>토글 OFF 상태인 광고주가 의외로 많음.</strong></p><h3>③ 주요 이벤트 정의</h3><ul style="margin-left:20px;color:var(--text-2)"><li>비즈니스 핵심 액션이 주요 이벤트로 등록됐는가?</li><li>page_view 같은 일상 이벤트가 잘못 표시되진 않았나?</li></ul><h3>④ Google Ads 연동</h3><p>관리자 → 제품 링크 → Google Ads 링크 확인.</p><h3>⑤ Search Console 연동</h3><p>관리자 → 제품 링크 → Search Console 링크. 자연 검색 키워드 분석에 필수.</p><h3>⑥ 내부 트래픽 필터</h3><p>회사 IP에서 들어온 방문은 분석에서 제외.</p><h3>⑦ 데이터 보관 기간</h3><p>기본 2개월 → <strong>14개월로 변경</strong> 권장.</p><h3>⑧ 사용자 ID 설정</h3><p>로그인 사이트의 경우 user_id를 보내고 있는지 확인.</p><h3>⑨ 통화/시간대</h3><p>한국 광고주인데 USD/UTC로 설정된 경우 매출 분석이 왜곡됨.</p><h3>⑩ 잠재고객·맞춤 측정기준</h3><p>마케팅에 쓸 잠재고객, 맞춤 측정기준이 사전 설정됐는지.</p><div class="practical"><div class="practical-title">💼 진단 보고서 구조 (NHN AD 스타일)</div><ol style="margin-left:20px;margin-top:6px"><li><strong>요약</strong> — 종합 점수 + 핵심 발견사항 3가지</li><li><strong>항목별 진단표</strong> — ✅/⚠️/❌ 표시</li><li><strong>우선순위 개선 과제</strong> — 시급도 × 영향도 매트릭스</li><li><strong>실행 가이드</strong> — 광고주가 직접 할 수 있는 항목</li><li><strong>면책</strong> — "본 진단은 컨설팅 관점이며, 기술 구현은 별도 개발사 협업 필요"</li></ol></div><div class="disclaimer">⚠️ <strong>면책 안내:</strong> 본 진단 항목은 NHN AD DX팀의 컨설팅·분석·가이드 범위에 해당하며, 실제 GA4 설정 변경·태그 구현 등 기술적 작업은 별도 개발 리소스 또는 광고주 직접 수행이 필요합니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 측정 ID가 사이트에 박혔는지 가장 빠르게 확인하는 법은?</div><div class="check-q">2. 데이터 보관 기간 권장 설정은?</div><div class="check-q">3. 회사 직원 트래픽이 분석에 섞이는 걸 막으려면?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/10269537" target="_blank" rel="noopener">[GA4] Internal traffic filter</a><a href="https://support.google.com/analytics/answer/7667196" target="_blank" rel="noopener">[GA4] Data retention</a></div>`},
+
+{stage:3,num:13,title:"랜딩페이지 UX 진단 with GA4",goals:["GA4 데이터로 랜딩페이지 문제를 진단하는 프레임워크를 안다","참여율·이탈률·체류시간을 UX 가설과 연결한다","광고주에게 데이터 기반 개선안을 제시한다"],body:`<h2>랜딩페이지 진단의 4가지 시각</h2><div class="diagram"><div class="flow"><div class="flow-step">유입 품질</div><div class="flow-step">첫인상</div><div class="flow-step">참여 깊이</div><div class="flow-step">전환 연결</div></div></div><h3>① 유입 품질 — "어디서 온 사람들인가?"</h3><table><tr><th>패턴</th><th>해석</th><th>UX 가설</th></tr><tr><td>유료 광고 + 이탈 높음</td><td>광고-랜딩 메시지 불일치</td><td>광고 카피와 랜딩 헤드 일치 점검</td></tr><tr><td>자연 검색 + 참여 높음</td><td>SEO·콘텐츠 매칭 양호</td><td>유지·강화</td></tr></table><h3>② 첫인상 — "왔는데 5초 안에 떠나는가?"</h3><p>핵심 지표: <strong>참여율(Engagement Rate)</strong></p><ul style="margin-left:20px;color:var(--text-2)"><li>참여율 30% 미만 → 첫 화면에서 빠르게 이탈. 헤드 카피·시각·로딩 속도 점검</li><li>평균 참여 시간 10초 미만 → 즉시 떠남. 핵심 가치 제안 가시성 점검</li></ul><h3>③ 참여 깊이 — "스크롤·클릭하는가?"</h3><p>향상된 측정의 <strong>scroll(90% 도달)</strong>·<strong>click(외부 링크)</strong> 이벤트로 확인.</p><h3>④ 전환 연결 — "주요 이벤트로 이어지는가?"</h3><p>탐색 분석 → 유입경로 탐색에서 "랜딩 → CTA 클릭 → 폼 제출 → 완료" 퍼널 그리기.</p><h2>진단 → 개선 가설 매트릭스</h2><table><tr><th>관찰</th><th>가능한 원인</th><th>UX 개선안</th></tr><tr><td>참여율 낮음 + 모바일 비중 높음</td><td>모바일 가독성 문제</td><td>폰트·여백·이미지 사이즈 검토</td></tr><tr><td>스크롤 50% 미만 다수</td><td>핵심 콘텐츠 위쪽 부족</td><td>Above the fold 재구성</td></tr><tr><td>CTA 클릭 후 이탈</td><td>다음 페이지 로딩 느림</td><td>페이지 속도 측정</td></tr></table><div class="practical"><div class="practical-title">💼 NHN AD UX 라이팅 컨설팅 연계</div>GA4로 발견한 문제 → UX 라이팅 컨설팅으로 연결. 예: CTA 클릭률 낮음 발견 → "지금 바로 신청" → "30초 만에 견적 받기"처럼 가치 명시형 카피로 A/B 테스트 제안. 정량(GA4) + 정성(UX 라이팅) 결합이 DX팀의 강점입니다.</div><div class="disclaimer">⚠️ <strong>면책 안내:</strong> 본 컨설팅은 GA4 데이터 분석·가설 도출 범위이며, 실제 페이지 변경·A/B 테스트 도구 도입 등은 광고주의 개발 리소스 또는 별도 협업이 필요합니다.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 참여율이 25%일 때 가장 먼저 의심해야 할 것은?</div><div class="check-q">2. 스크롤 도달률이 낮으면 어떻게 개선?</div><div class="check-q">3. CTA 클릭은 많은데 전환은 안 되는 경우 다음 점검 포인트는?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/12253918" target="_blank" rel="noopener">[GA4] Engagement rate and bounce rate</a></div>`},
+
+{stage:3,num:14,title:"트래픽 소스 분석 → 매체 전략 제안",goals:["GA4의 채널 그룹·소스/매체 개념을 안다","채널별 효율을 비교해 매체 전략을 제안한다","기여 모델을 이해하고 광고주에게 설명한다"],body:`<h2>트래픽 소스 = 사용자가 어디서 왔나?</h2><table><tr><th>용어</th><th>의미</th><th>예시</th></tr><tr><td><strong>소스 (Source)</strong></td><td>구체적 출처</td><td>google, facebook, naver</td></tr><tr><td><strong>매체 (Medium)</strong></td><td>마케팅 카테고리</td><td>organic, cpc, email, referral</td></tr><tr><td><strong>캠페인</strong></td><td>UTM 캠페인 이름</td><td>summer_sale_2024</td></tr><tr><td><strong>채널 그룹</strong></td><td>소스/매체를 묶은 큰 카테고리</td><td>Organic Search, Paid Search 등</td></tr></table><h2>GA4 기본 채널 그룹</h2><table><tr><th>채널</th><th>설명</th></tr><tr><td>Direct</td><td>주소창 직접 입력·북마크</td></tr><tr><td>Organic Search</td><td>자연 검색 (Google·Naver 등)</td></tr><tr><td>Paid Search</td><td>유료 검색 광고</td></tr><tr><td>Organic Social / Paid Social</td><td>SNS 자연/유료 유입</td></tr><tr><td>Display</td><td>디스플레이 광고</td></tr><tr><td>Email</td><td>이메일 캠페인</td></tr><tr><td>Referral</td><td>다른 사이트 링크</td></tr><tr><td>Unassigned</td><td>분류 안 됨 (UTM 누락 등)</td></tr></table><p style="background:var(--surface-2);padding:12px;border-radius:var(--rs);font-size:13px">💡 Unassigned가 많으면 UTM 태깅이 누락된 캠페인이 있다는 신호입니다.</p><h2>채널별 효율 비교 프레임워크</h2><table><tr><th>채널</th><th>사용자</th><th>참여율</th><th>주요 이벤트</th><th>전환율</th></tr><tr><td>Paid Search</td><td>1,000</td><td>40%</td><td>50</td><td>5%</td></tr><tr><td>Organic Search</td><td>2,000</td><td>65%</td><td>80</td><td>4%</td></tr><tr><td>Paid Social</td><td>500</td><td>25%</td><td>5</td><td>1%</td></tr></table><p>Paid Social의 낮은 전환율 → ① 타겟팅 재검토 ② 랜딩페이지 최적화 ③ 크리에이티브 점검 순으로 액션 제안.</p><h2>기여 모델 (Attribution Model)</h2><table><tr><th>모델</th><th>방식</th><th>특징</th></tr><tr><td>마지막 클릭</td><td>마지막 접점에 100%</td><td>UA 기본값</td></tr><tr><td><strong>데이터 기반</strong></td><td>머신러닝이 채널별 가중치 산출</td><td><strong>GA4 기본값</strong></td></tr><tr><td>첫 클릭</td><td>처음 접점에 100%</td><td>인지 채널 평가</td></tr></table><div class="practical"><div class="practical-title">💼 매체 전략 제안 흐름</div>① 최근 3개월 채널별 효율표 작성 → ② 효율 좋은 채널은 예산 증액 / 효율 낮은 채널은 진단·개선 후 재투자 → ③ 데이터 기반 기여 모델 적용 시 변화 분석 → ④ 다음 분기 미디어 믹스 제안.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. "Unassigned" 채널이 많을 때 의심해야 할 것은?</div><div class="check-q">2. GA4의 기본 기여 모델은?</div><div class="check-q">3. Source = google / Medium = cpc 라면 채널은?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9756891" target="_blank" rel="noopener">[GA4] Default channel group</a><a href="https://support.google.com/analytics/answer/10596866" target="_blank" rel="noopener">[GA4] Attribution modeling</a></div>`},
+
+{stage:3,num:15,title:"퍼널 이탈 분석 → 개선 가설",goals:["유입경로 탐색으로 핵심 퍼널을 그린다","이탈 단계에서 가능한 원인을 체계적으로 도출한다","광고주에게 우선순위 있는 개선안을 제안한다"],body:`<h2>퍼널이란?</h2><p>사용자가 목표(구매·가입 등)에 도달하기까지 거치는 단계의 흐름. 각 단계에서 점점 사람이 빠져나가서 "깔때기" 모양이 됩니다.</p><div class="diagram"><p style="margin-bottom:12px;font-size:14px;color:var(--text-3)">전형적인 이커머스 퍼널</p><div class="flow"><div class="flow-step">방문 (100%)</div><span class="flow-arrow">↓</span><div class="flow-step">상품 조회 (40%)</div><span class="flow-arrow">↓</span><div class="flow-step">장바구니 (15%)</div><span class="flow-arrow">↓</span><div class="flow-step">결제 시작 (8%)</div><span class="flow-arrow">↓</span><div class="flow-step">구매 완료 (3%)</div></div></div><h2>GA4에서 퍼널 그리기</h2><ol style="margin-left:20px;color:var(--text-2)"><li>탐색 → 유입경로 탐색 템플릿 선택</li><li>각 단계를 이벤트로 정의 (예: page_view + page_path / add_to_cart / purchase)</li><li>'시각화' → 표준 퍼널 또는 추세 퍼널 선택</li></ol><h2>이탈 단계별 가능한 원인</h2><table><tr><th>이탈 지점</th><th>가능한 원인</th><th>1차 점검 항목</th></tr><tr><td>방문 → 상품 조회</td><td>랜딩 매력도 부족</td><td>홈/카테고리 페이지 UX</td></tr><tr><td>상품 조회 → 장바구니</td><td>가격·옵션·후기 신뢰 부족</td><td>가격 명확성, 후기 노출</td></tr><tr><td>장바구니 → 결제 시작</td><td>예상치 못한 비용, 회원가입 강요</td><td>배송비 사전 안내, 비회원 결제</td></tr><tr><td>결제 시작 → 구매 완료</td><td>결제 수단 부족, 결제 오류, 폼 복잡</td><td>결제 옵션, 폼 단순화</td></tr></table><h2>이탈 분석 → 개선 가설 작성 템플릿</h2><div class="concept-box"><p><strong>[관찰]</strong> 결제 시작 → 완료 단계에서 60% 이탈 발생 (업계 평균 30%)</p><p><strong>[가설]</strong> 결제 폼이 너무 길어 모바일 사용자의 이탈을 유발할 가능성</p><p><strong>[검증]</strong> 기기별 퍼널 분리 분석 → 모바일 이탈률 75%, PC 35% 확인</p><p><strong>[개선안]</strong> 모바일 결제 폼 필드 수 50% 감축, 자동완성 도입</p><p><strong>[성공 지표]</strong> 모바일 결제 완료율 35% → 50% 이상</p></div><h2>세그먼트와 결합한 심층 분석</h2><ul style="margin-left:20px;color:var(--text-2)"><li>신규 vs 재방문 사용자</li><li>모바일 vs PC</li><li>유입 채널별</li><li>지역별</li></ul><div class="practical"><div class="practical-title">💼 컨설팅 보고서 표현 예시</div>❌ <strong>약한 표현:</strong> "전환율이 낮습니다."<br>✅ <strong>강한 표현:</strong> "방문 → 구매 전환율 1.2%로 업종 평균(2.5%) 대비 절반 수준이며, 핵심 이탈 단계는 결제 시작 → 완료(60% 이탈)입니다. 모바일 결제 폼 단순화로 +0.6%p 개선 가능성이 있습니다."</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 퍼널을 그릴 수 있는 GA4 도구는?</div><div class="check-q">2. 결제 시작 → 완료 이탈이 높을 때 첫 점검 항목은?</div><div class="check-q">3. 같은 퍼널을 더 깊이 보려면 어떤 분석을 추가?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9327974" target="_blank" rel="noopener">[GA4] Funnel exploration</a></div>`},
+
+{stage:3,num:16,title:"GA4 + Google Ads / Search Console 연동 인사이트",goals:["GA4와 외부 도구 연동의 의미를 안다","연동 후 새로 볼 수 있는 보고서를 안다","통합 인사이트를 광고주에게 제안한다"],body:`<h2>GA4를 더 강하게 만드는 핵심 연동 3가지</h2><table><tr><th>연동</th><th>얻는 것</th><th>설정 위치</th></tr><tr><td><strong>Google Ads</strong></td><td>광고 캠페인 → 사이트 행동 → 전환 통합 분석</td><td>관리자 → 제품 링크 → Google Ads</td></tr><tr><td><strong>Search Console</strong></td><td>자연 검색 키워드·노출·CTR</td><td>관리자 → 제품 링크 → Search Console</td></tr><tr><td><strong>BigQuery</strong></td><td>원본 데이터 SQL 분석 (무료)</td><td>관리자 → 제품 링크 → BigQuery</td></tr></table><h2>① Google Ads 연동</h2><p>광고에서 클릭한 사용자가 사이트에서 어떻게 행동하고 결국 전환했는지 끝까지 추적.</p><h3>연동 후 새로 볼 수 있는 것</h3><ul style="margin-left:20px;color:var(--text-2)"><li>광고 캠페인별 사이트 행동</li><li>광고 비용 + 전환 → ROAS 자동 계산</li><li>GA4 잠재고객을 Google Ads 타겟팅에 활용</li><li>Google Ads에서 GA4의 주요 이벤트를 전환으로 사용</li></ul><h2>② Search Console 연동</h2><p>자연 검색 트래픽을 키워드 단위로 분석. SEO 컨설팅의 필수 데이터.</p><h3>SEO/GEO 컨설팅 활용 시나리오</h3><table><tr><th>관찰</th><th>인사이트</th></tr><tr><td>특정 키워드 노출↑ + CTR↓</td><td>메타 타이틀·설명 개선 필요</td></tr><tr><td>키워드 진입 후 참여율 낮음</td><td>키워드와 페이지 콘텐츠 매칭 부족</td></tr><tr><td>지역별 검색량 차이</td><td>지역 타겟팅 콘텐츠 전략</td></tr></table><h2>③ BigQuery 연동 (고급)</h2><p>GA4 원본 이벤트 데이터를 SQL로 분석. <strong>무료 무제한 export 가능</strong>이 GA4의 큰 장점.</p><ul style="margin-left:20px;color:var(--text-2)"><li>샘플링 없는 정확한 데이터</li><li>맞춤 분석 자유도 무한대</li><li>다른 데이터(CRM·매출)와 조인 가능</li></ul><div class="practical"><div class="practical-title">💼 통합 분석 시나리오</div>Search Console로 자연 키워드 발굴 → Google Ads에서 동일 키워드 입찰 비용 확인 → GA4에서 키워드별 전환율 비교 → "이 키워드는 자연 노출 강화, 저 키워드는 유료 입찰 유지" 같은 통합 매체 전략 제안.</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트</div><div class="check-q">1. 자연 검색 키워드를 GA4에서 보려면 무엇을 연동?</div><div class="check-q">2. Google Ads 연동 시 가장 큰 가치는?</div><div class="check-q">3. BigQuery 연동의 장점 1가지는?</div></div><div class="sources"><div class="sources-title">🔗 공식 출처</div><a href="https://support.google.com/analytics/answer/9379420" target="_blank" rel="noopener">[GA4] Link Google Ads</a><a href="https://support.google.com/analytics/answer/10737381" target="_blank" rel="noopener">[GA4] Link Search Console</a><a href="https://support.google.com/analytics/answer/9358801" target="_blank" rel="noopener">[GA4] BigQuery Export</a></div>`},
+
+{stage:3,num:17,title:"컨설팅 보고서 구성 템플릿 (NHN AD DX 스타일)",goals:["GA4 분석 결과를 광고주에게 전달하는 표준 구조를 안다","데이터 → 인사이트 → 액션의 흐름으로 보고서를 쓴다","면책·범위 명시로 컨설팅 결과물의 신뢰도를 높인다"],body:`<h2>컨설팅 보고서 7단계 구조</h2><h3>1️⃣ 표지 + 요약</h3><ul style="margin-left:20px;color:var(--text-2)"><li>분석 기간·대상 사이트·작성자·작성일</li><li>핵심 발견사항 3가지</li><li>우선순위 액션 3가지</li></ul><h3>2️⃣ 분석 범위 및 면책</h3><div class="disclaimer">본 보고서는 [기간] GA4 데이터를 기반으로 한 컨설팅·분석·가이드 산출물입니다. NHN AD DX팀의 역할은 분석 및 전략 제안 범위에 한정되며, 다음 사항은 별도 협업이 필요합니다:<br>① GA4 설정 변경 및 태그 구현 → 광고주 또는 별도 개발 협업<br>② A/B 테스트 도구 도입 → 별도 솔루션 검토<br>③ 페이지 디자인·코드 수정 → 광고주 개발/디자인 리소스</div><h3>3️⃣ 현황 진단 (As-Is)</h3><table><tr><th>항목</th><th>현재 수치</th><th>업종 벤치마크</th><th>평가</th></tr><tr><td>월 사용자</td><td>10,500</td><td>—</td><td>—</td></tr><tr><td>참여율</td><td>42%</td><td>50~60%</td><td>⚠️ 개선 필요</td></tr><tr><td>주요 이벤트율</td><td>1.8%</td><td>2~3%</td><td>⚠️ 개선 필요</td></tr></table><h3>4️⃣ 핵심 발견 사항</h3><div class="concept-box"><p><strong>발견 1.</strong> Paid Social 채널의 참여율(22%)이 다른 채널 대비 절반 수준</p><p><strong>해석:</strong> 광고 카피와 랜딩 페이지 메시지가 일치하지 않을 가능성</p><p><strong>의미:</strong> 광고 예산의 30%가 효과적이지 않게 집행되고 있을 수 있음</p></div><h3>5️⃣ 개선안 (To-Be)</h3><table><tr><th>개선안</th><th>예상 효과</th><th>구현 난이도</th><th>우선순위</th></tr><tr><td>광고-랜딩 메시지 정렬</td><td>참여율 +20%p</td><td>중</td><td>🔴 High</td></tr><tr><td>모바일 결제 폼 단순화</td><td>전환율 +0.6%p</td><td>고</td><td>🟡 Medium</td></tr><tr><td>주요 이벤트 정의 재정비</td><td>측정 정확도 향상</td><td>저</td><td>🟢 Quick Win</td></tr></table><h3>6️⃣ 실행 로드맵</h3><ul style="margin-left:20px;color:var(--text-2)"><li>1주차: GA4 설정 보정</li><li>2~3주차: 광고 카피·랜딩 정렬</li><li>4~8주차: 결제 폼 개선 + A/B 테스트</li><li>9주차: 효과 측정 및 보고</li></ul><h3>7️⃣ 성공 지표 (KPI)</h3><table><tr><th>KPI</th><th>현재</th><th>목표 (3개월 후)</th></tr><tr><td>참여율</td><td>42%</td><td>52%</td></tr><tr><td>주요 이벤트율</td><td>1.8%</td><td>2.5%</td></tr><tr><td>Paid Social ROAS</td><td>180%</td><td>250%</td></tr></table><h2>보고서 작성 시 자주 하는 실수 5가지</h2><ol style="margin-left:20px;color:var(--text-2)"><li><strong>데이터만 나열</strong> — 해석·의미·액션이 빠지면 광고주가 활용 못 함</li><li><strong>전문 용어 남발</strong> — 풀어 설명 필요</li><li><strong>면책·범위 누락</strong> — 컨설팅 산출물의 책임 범위 명시 필수</li><li><strong>벤치마크 없는 평가</strong> — 기준이 애매</li><li><strong>우선순위 없는 개선안</strong> — 광고주가 뭘 먼저 할지 모름</li></ol><div class="practical"><div class="practical-title">💼 산출물 형식 추천</div>① <strong>Slack용 요약</strong>: 3줄 발견 + 3개 액션 (300자)<br>② <strong>Notion 본문</strong>: 7단계 구조 (5~10페이지)<br>③ <strong>광고주 발표용 PDF</strong>: 시각자료 중심<br>④ <strong>실무 핸드오프</strong>: GA4 설정 변경 가이드 (체크리스트)</div><div class="checkpoint"><div class="checkpoint-title">✅ 체크포인트 (마지막!)</div><div class="check-q">1. 컨설팅 보고서에서 "발견 사항"의 3단 구조는?</div><div class="check-q">2. 면책 문구에 반드시 포함되어야 할 것은?</div><div class="check-q">3. 우선순위 결정 시 고려할 두 축은?</div></div><p style="margin-top:32px;padding:20px;background:var(--success-soft);border-radius:var(--r);border-left:3px solid var(--success)">🎉 <strong>17챕터 학습 완료!</strong> 이제 매일 아침 5분 퀴즈로 복습하면서 실력을 다져보세요. 상단 ⚡ 퀴즈 탭으로 이동하면 오늘의 5문제가 기다리고 있어요.</p><div class="sources"><div class="sources-title">🔗 추가 학습 자료</div><a href="https://skillshop.exceedlms.com/student/path/2938" target="_blank" rel="noopener">Google Analytics Certification (Skillshop)</a><a href="https://analytics.google.com/analytics/academy/" target="_blank" rel="noopener">Google Analytics Academy</a></div>`}
+];
+
+const QUIZZES={
+1:[{q:"GA4를 가장 정확히 설명하는 것은?",o:["웹사이트 디자인 도구","사용자 행동을 자동 기록·분석하는 Google의 무료 도구","유료 광고 집행 도구","검색 엔진 순위 측정 도구"],a:1,e:"GA4는 웹사이트와 앱에서 사용자 행동을 자동으로 기록하고 보고서로 보여주는 Google의 무료 분석 도구입니다."},{q:"다음 중 GA4의 핵심 특징이 아닌 것은?",o:["이벤트 기반 데이터 모델","웹과 앱 통합 분석","유료 구독 필수","머신러닝 기반 예측"],a:2,e:"GA4는 Google 계정만 있으면 누구나 무료로 사용할 수 있습니다."},{q:"광고주에게 GA4를 추천하는 가장 적절한 이유는?",o:["광고비 자동 절감","광고 성과를 사이트 행동으로 객관적 측정 가능","사이트 디자인 자동 개선","검색 순위 보장"],a:1,e:"GA4는 광고비를 쓴 결과가 실제 사이트 행동·전환으로 이어지는지 측정하는 표준 도구입니다."},{q:"GA4가 측정하는 데이터의 범위는?",o:["웹사이트만","모바일 앱만","웹사이트 + 모바일 앱 통합","이메일 마케팅만"],a:2,e:"GA4는 웹과 앱을 통합 분석하는 것이 큰 특징입니다."},{q:"GA4 학습을 시작할 때 가장 먼저 이해해야 할 것은?",o:["BigQuery SQL 문법","이벤트 기반 데이터 모델 개념","Java 프로그래밍","서버 인프라 구조"],a:1,e:"GA4의 모든 기능은 '이벤트 기반' 모델 위에 세워져 있어, 이 개념 이해가 출발점입니다."}],
+2:[{q:"한 사용자가 같은 날 사이트를 3번 방문(각 30분 간격 이상)했다면 세션 수는?",o:["1개","2개","3개","4개"],a:2,e:"기본 30분 무활동 시 세션이 종료되므로 3번 방문은 3개 세션입니다."},{q:"page_view는 무엇에 해당하나요?",o:["사용자","세션","이벤트","매개변수"],a:2,e:"GA4에서 page_view는 자동 수집 이벤트의 한 종류입니다."},{q:"GA4에서 '주요 이벤트(Key Event)'의 예전 명칭은?",o:["목표(Goal)","전환(Conversion)","히트(Hit)","캠페인"],a:1,e:"2024년 GA4 업데이트로 '전환'이 '주요 이벤트'로 명칭 변경되었습니다."},{q:"GA4에서 '참여 세션'으로 인정되는 조건이 아닌 것은?",o:["10초 이상 머무름","주요 이벤트 발생","페이지뷰 2회 이상","광고 클릭"],a:3,e:"참여 세션은 ① 10초 이상 ② 주요 이벤트 발생 ③ 페이지뷰 2회 이상 중 하나를 만족해야 합니다."},{q:"측정기준과 측정항목의 관계로 옳은 것은?",o:["둘은 동의어","측정기준은 카테고리, 측정항목은 숫자값","측정항목이 더 중요","측정기준은 사용자만, 측정항목은 세션만"],a:1,e:"측정기준은 분석의 축이 되는 카테고리, 측정항목은 그에 대한 숫자값입니다."}],
+3:[{q:"GA4에서 새로운 이벤트를 만들거나 설정하려면 어느 메뉴로 가야 하나요?",o:["보고서","탐색","광고","관리자"],a:3,e:"이벤트 생성·맞춤 측정기준 등록 등 설정 변경은 모두 관리자 메뉴에서 합니다."},{q:"지금 이 순간 사이트에 누가 접속해 있는지 보려면?",o:["보고서 → 실시간","보고서 → 수명 주기","탐색 → 자유 형식","관리자 → 데이터 스트림"],a:0,e:"실시간 보고서는 최근 30분간의 활동을 거의 지연 없이 보여줍니다."},{q:"표준 보고서로 답이 안 나오는 맞춤 분석은 어디서 하나요?",o:["보고서","탐색","광고","라이브러리"],a:1,e:"탐색(Explore) 메뉴에서 자유롭게 분석 보고서를 만들 수 있습니다."},{q:"GA4 보고서 메뉴 안의 '수명 주기' 컬렉션에 포함되지 않는 것은?",o:["획득","참여","수익화","관리자"],a:3,e:"수명 주기는 획득·참여·수익화·유지 4단계로 구성됩니다."},{q:"광고주에게 GA4 화면을 처음 보여줄 때 자연스러운 순서는?",o:["관리자 → 보고서 → 탐색","보고서 개요 → 트래픽 획득 → 참여 → 주요 이벤트","탐색 → 보고서 → 광고","실시간 → 관리자 → 광고"],a:1,e:"사용자 여정 흐름 순서로 보여주면 이해가 쉽습니다."}],
+4:[{q:"Universal Analytics(UA)가 데이터 수집을 중단한 시점은?",o:["2022년 1월","2023년 7월","2024년 1월","2025년 7월"],a:1,e:"UA는 2023년 7월 1일자로 데이터 수집을 중단했습니다."},{q:"UA의 '이탈률(Bounce Rate)'은 GA4에서 어떻게 변경됐나요?",o:["그대로 유지","참여율(Engagement Rate)로 대체","삭제됨","유료 기능으로 변경"],a:1,e:"GA4는 참여율(긍정 지표)을 핵심 지표로 사용합니다."},{q:"UA와 GA4의 가장 큰 차이는?",o:["가격","데이터 모델 (세션 기반 vs 이벤트 기반)","지원 언어","회원가입 방식"],a:1,e:"UA는 세션 기반, GA4는 이벤트 기반 모델로 데이터 구조가 근본적으로 다릅니다."},{q:"광고주가 'UA에선 전환 100건이었는데 GA4에선 80건이에요' 한다면?",o:["GA4 설정 오류일 것","두 도구는 데이터 모델이 달라 일대일 비교는 의미 없으며 GA4 기준 새 베이스라인 권장","UA가 더 정확함","Google에 항의해야 함"],a:1,e:"두 도구는 측정 방식이 다르므로 수치 비교보다 GA4 기준으로 새 기준점을 잡는 게 맞습니다."},{q:"GA4가 무료로 제공하지만 UA에서는 유료(GA360)였던 기능은?",o:["기본 보고서","BigQuery 연동","이메일 알림","사용자 권한 관리"],a:1,e:"BigQuery 무료 연동은 GA4의 큰 장점 중 하나입니다."}],
+5:[{q:"GA4 데이터의 흐름 4단계 순서는?",o:["발생 → 수집 → 처리 → 보고","수집 → 발생 → 보고 → 처리","보고 → 처리 → 수집 → 발생","처리 → 발생 → 수집 → 보고"],a:0,e:"사용자 행동 발생 → 태그가 수집 → Google 서버에서 처리 → 대시보드에 보고."},{q:"방금 추가한 태그가 잘 작동하는지 가장 빠르게 확인하는 방법은?",o:["24시간 대기 후 표준 보고서 확인","실시간 보고서 확인","이메일 문의","BigQuery 쿼리 실행"],a:1,e:"실시간 보고서는 거의 지연 없이 데이터가 들어오므로 태그 검증에 최적입니다."},{q:"GA4 표준 보고서의 일반적인 데이터 처리 지연은?",o:["수 초","1시간 이내","최대 24~48시간","1주일"],a:2,e:"GA4 표준 보고서는 데이터 처리에 보통 24~48시간이 소요됩니다."},{q:"데이터 수집 단계에서 가장 자주 사용되는 도구 2가지는?",o:["Google Tag Manager + gtag.js","Photoshop + Figma","Slack + Notion","Excel + PowerPoint"],a:0,e:"사이트에 측정 코드를 심을 때 GTM 또는 gtag.js를 사용합니다."},{q:"실시간엔 데이터가 보이는데 표준 보고서에 안 보이면?",o:["설정 오류","처리 지연일 가능성 — 24시간 대기","환불 신청","재설치 필요"],a:1,e:"처리 단계에서 시간이 걸리므로 24시간 정도 기다려보고 점검합니다."}],
+6:[{q:"GA4 수명 주기(Life Cycle)의 4단계 순서는?",o:["참여 → 획득 → 유지 → 수익화","획득 → 참여 → 수익화 → 유지","수익화 → 획득 → 참여 → 유지","유지 → 수익화 → 참여 → 획득"],a:1,e:"사용자 여정 순서: 어떻게 왔는가(획득) → 무엇을 했는가(참여) → 매출 발생(수익화) → 다시 왔는가(유지)"},{q:"사용자 획득과 트래픽 획득의 차이는?",o:["사용자 획득은 처음 유입 경로, 트래픽 획득은 각 세션의 유입 경로","둘은 같은 보고서","사용자 획득은 모바일만, 트래픽 획득은 PC만","사용자 획득은 유료, 트래픽 획득은 무료"],a:0,e:"사용자 획득 = 처음 유입 / 트래픽 획득 = 매 세션 유입(재방문 포함)."},{q:"유지(Retention) 보고서가 보여주는 최대 기간은?",o:["7일","30일","42일","90일"],a:2,e:"유지 보고서는 첫 방문 후 최대 42일간 재방문 패턴을 보여줍니다."},{q:"이커머스 매출·구매 분석에 가장 적합한 보고서 카테고리는?",o:["획득","참여","수익화","유지"],a:2,e:"수익화(Monetization) 보고서에 전자상거래 구매·구매 여정·결제 여정 등이 포함됩니다."},{q:"광고주 컨설팅 시 사용자 여정 분석의 자연스러운 흐름은?",o:["유지 → 수익화 → 참여 → 획득","트래픽 획득 → 참여 → 주요 이벤트 → 유지","관리자 → 광고 → 탐색","실시간 → 보고서 → 광고"],a:1,e:"이 흐름이 컨설팅 보고서 목차로도 활용됩니다."}],
+7:[{q:"별도 설정 없이 GA4에서 자동으로 수집되는 이벤트의 예는?",o:["purchase","first_visit","cta_click","demo_request"],a:1,e:"first_visit, session_start, user_engagement는 자동 수집 이벤트입니다."},{q:"관리자에서 토글 한 번으로 켤 수 있는 이벤트 묶음의 이름은?",o:["맞춤 이벤트","추천 이벤트","향상된 측정(Enhanced Measurement) 이벤트","전환 이벤트"],a:2,e:"향상된 측정 이벤트는 관리자 → 데이터 스트림에서 토글로 켭니다."},{q:"이커머스에서 '결제 시작'을 추적하는 추천 이벤트 이름은?",o:["start_checkout","begin_checkout","checkout_init","payment_start"],a:1,e:"Google 추천 이벤트 표준 이름은 begin_checkout입니다."},{q:"GA4 이벤트 이름 규칙으로 옳은 것은?",o:["한글 가능, 길이 무제한","40자 이하, 영문 소문자+숫자+언더스코어","100자 이하, 대문자만","공백 허용"],a:1,e:"이벤트 이름은 40자 이하, 영문 소문자·숫자·언더스코어 조합을 권장합니다."},{q:"다음 중 향상된 측정 이벤트가 아닌 것은?",o:["scroll","file_download","video_start","purchase"],a:3,e:"purchase는 추천 이벤트로, 직접 구현해야 합니다."}],
+8:[{q:"주요 이벤트(Key Event)에 대한 설명으로 옳은 것은?",o:["page_view 같은 모든 이벤트가 자동으로 주요 이벤트","비즈니스에 중요한 이벤트만 표시한 것 (예전 명칭: 전환)","유료로만 사용 가능","최대 20개까지만 가능"],a:1,e:"주요 이벤트는 비즈니스적으로 중요한 행동을 표시한 것이며, 예전엔 '전환'이라 불렸습니다."},{q:"B2B SaaS 사이트에 추천하기 좋은 주요 이벤트는?",o:["purchase, add_to_cart","sign_up, trial_start, subscribe","video_start, scroll","first_visit, session_start"],a:1,e:"SaaS는 회원가입·체험 시작·구독을 핵심 KPI로 삼는 게 일반적입니다."},{q:"주요 이벤트 카운팅 옵션 중 '구매'에 적합한 것은?",o:["이벤트마다 1회 (Once per event)","세션당 1회","사용자당 1회","구매는 카운트 안 함"],a:0,e:"한 사용자가 한 세션에서 여러 번 구매해도 모두 매출이므로 '이벤트마다 1회'가 맞습니다."},{q:"주요 이벤트 카운팅 옵션 중 '로그인·뉴스레터 가입'에 적합한 것은?",o:["이벤트마다 1회","세션당 1회 (Once per session)","월당 1회","사용자당 1회"],a:1,e:"한 세션 내 여러 번 로그인해도 의미가 같으므로 '세션당 1회'가 자연스럽습니다."},{q:"광고주에게 가장 먼저 물어야 할 컨설팅 질문은?",o:["GA4 비밀번호가 뭔가요?","이 사이트의 가장 중요한 사용자 행동 3가지는?","광고비는 얼마인가요?","직원 수가 몇 명인가요?"],a:1,e:"비즈니스 핵심 행동을 명확히 해야 그게 곧 주요 이벤트가 됩니다."}],
+9:[{q:"잠재고객(Audience)과 세그먼트(Segment)의 가장 큰 차이는?",o:["둘은 동의어","잠재고객은 영구 저장·광고 활용 가능, 세그먼트는 분석 일회성","세그먼트가 더 비싸다","잠재고객은 무료, 세그먼트는 유료"],a:1,e:"잠재고객은 관리자에 영구 저장되어 Google Ads 등에 내보내기 가능, 세그먼트는 탐색 분석 안에서만 쓰입니다."},{q:"'장바구니 이탈자' 잠재고객의 조건으로 가장 적절한 것은?",o:["page_view만 있음","add_to_cart 발생 + purchase 미발생","session_start만 있음","first_visit만 있음"],a:1,e:"장바구니에는 담았으나 구매는 안 한 사용자가 이탈자입니다."},{q:"예측 잠재고객(Predictive Audience) 사용 조건은?",o:["Google Ads 가입자만","최근 28일간 1,000명 이상 데이터 필요","유료 GA4 구독","5년 이상 운영 사이트"],a:1,e:"머신러닝이 학습하려면 28일간 1,000명 이상의 데이터가 필요합니다."},{q:"잠재고객의 광고 활용 시나리오로 적절한 것은?",o:["GA4 안에서만 보고","Google Ads에 내보내 리타겟팅","네이버 광고에 자동 동기화","오프라인 매장 광고에 사용"],a:1,e:"GA4 잠재고객을 Google Ads로 내보내 리타겟팅하는 것이 표준 활용법입니다."},{q:"다음 중 예측 잠재고객의 종류가 아닌 것은?",o:["구매 가능성 높은 사용자","이탈 가능성 높은 사용자","예상 지출액 상위 사용자","키 큰 사용자"],a:3,e:"예측 잠재고객은 구매·이탈·지출 예측 등 행동 기반입니다."}],
+10:[{q:"결제 단계별 이탈률 분석에 가장 적합한 탐색 템플릿은?",o:["자유 형식","유입경로 탐색 (Funnel)","코호트 탐색","사용자 탐색기"],a:1,e:"유입경로 탐색은 단계별 진행률·이탈률을 시각화하는 데 최적화돼 있습니다."},{q:"'사용자가 홈에서 다음에 가장 많이 가는 페이지' 분석은?",o:["자유 형식","경로 탐색 (Path)","세그먼트 중복","사용자 평생 가치"],a:1,e:"경로 탐색은 시작점에서의 사용자 흐름을 트리로 시각화합니다."},{q:"탐색 분석에서 가장 자주 사용되는 만능 템플릿은?",o:["자유 형식 (Free Form)","유입경로 탐색","코호트","사용자 평생 가치"],a:0,e:"자유 형식은 측정기준·측정항목을 자유 조합해 거의 모든 분석을 만들 수 있는 만능 템플릿입니다."},{q:"자유 형식 보고서를 만들 때 핵심 구성 요소는?",o:["측정기준 + 측정항목","사용자 + 비밀번호","이미지 + 텍스트","광고 + 예산"],a:0,e:"자유 형식은 측정기준(행/열 라벨)과 측정항목(숫자값)을 조합해 만듭니다."},{q:"1월 가입자의 3개월 후 재방문율을 분석하려면?",o:["자유 형식","유입경로","코호트 탐색","사용자 평생 가치"],a:2,e:"코호트 탐색은 동일 시점에 진입한 사용자 그룹을 시간 흐름에 따라 추적합니다."}],
+11:[{q:"'사용자 수'는 무엇에 해당하나요?",o:["측정기준","측정항목","이벤트","매개변수"],a:1,e:"사용자 수는 숫자값이므로 측정항목(Metric)입니다."},{q:"'방문 페이지'는 무엇에 해당하나요?",o:["측정기준","측정항목","주요 이벤트","잠재고객"],a:0,e:"방문 페이지는 카테고리/속성이므로 측정기준(Dimension)입니다."},{q:"이벤트 매개변수를 보냈는데 보고서에 안 나오면 가장 먼저 확인할 것은?",o:["사이트 코드 재배포","맞춤 측정기준 등록 여부","BigQuery 연동","Google Ads 연결"],a:1,e:"매개변수는 보냈더라도 맞춤 측정기준으로 등록해야 보고서에 나타납니다."},{q:"GA4 측정기준·측정항목의 4가지 범위(Scope)가 아닌 것은?",o:["이벤트","사용자","세션","광고"],a:3,e:"범위는 이벤트·사용자·세션·항목(이커머스 상품) 4가지입니다."},{q:"'국가별 매출'을 분석한다면 측정기준과 측정항목은?",o:["국가(기준) / 매출(항목)","매출(기준) / 국가(항목)","둘 다 기준","둘 다 항목"],a:0,e:"국가는 분류 카테고리(기준), 매출은 숫자값(항목)입니다."}],
+12:[{q:"측정 ID(G-XXXXX)가 사이트에 실제로 박혔는지 가장 빠르게 확인하려면?",o:["관리자 → 데이터 스트림","실시간 보고서에서 데이터 유입 확인","BigQuery 쿼리","Google Ads 연동"],a:1,e:"실시간 보고서에 데이터가 들어오면 태그가 정상 작동 중이라는 뜻입니다."},{q:"GA4 데이터 보관 기간 권장 설정은?",o:["2개월 (기본)","14개월","30일","5년"],a:1,e:"기본 2개월은 분석에 부족하므로 14개월로 변경하는 것을 권장합니다."},{q:"회사 직원의 사이트 방문이 분석에 섞이는 것을 막으려면?",o:["계정 비공개","내부 트래픽 필터 (IP 기반)","광고 차단","쿠키 삭제"],a:1,e:"관리자 → 데이터 필터에서 회사 IP를 내부 트래픽으로 분류해 제외할 수 있습니다."},{q:"광고주 GA4 진단에서 'Unassigned' 채널이 많을 때 가장 가능성 높은 원인은?",o:["서버 오류","UTM 태깅 누락","광고비 초과","사용자 부족"],a:1,e:"캠페인에 UTM 파라미터가 빠지면 GA4가 채널 분류를 못해 Unassigned로 잡힙니다."},{q:"한국 광고주 GA4의 시간대·통화 설정으로 적절한 것은?",o:["UTC / USD","Asia/Seoul / KRW","PST / EUR","GMT / GBP"],a:1,e:"광고주 비즈니스 운영 지역에 맞게 설정해야 매출·시간 분석이 왜곡되지 않습니다."}],
+13:[{q:"랜딩페이지 참여율이 25%로 낮을 때 가장 먼저 의심해야 할 것은?",o:["서버 다운","헤드 카피·시각·로딩 속도 등 첫인상 요소","맞춤 이벤트 누락","BigQuery 미연동"],a:1,e:"참여율이 낮다는 것은 사용자가 첫 화면에서 이탈한다는 신호입니다."},{q:"스크롤 90% 도달률이 낮으면 어떻게 개선하나요?",o:["페이지를 더 길게 만든다","Above the fold(첫 화면)에 핵심 콘텐츠 배치","광고 더 늘리기","회원가입 강제"],a:1,e:"스크롤이 적다는 것은 위쪽에서 가치를 못 느꼈다는 뜻이므로 첫 화면 재구성이 필요합니다."},{q:"CTA 클릭률은 높은데 전환은 낮을 때 다음 점검 항목은?",o:["CTA 버튼 색상","다음 페이지의 로딩 속도·경험","사이트 도메인","회사 로고"],a:1,e:"CTA 클릭 후 다음 페이지에서 이탈한다면 그 페이지의 속도·UX·폼 길이를 점검합니다."},{q:"유료 광고 트래픽이 많은데 이탈률이 높다면?",o:["광고비 증액","광고 카피와 랜딩 메시지 일치 점검","광고 중단","사이트 색상 변경"],a:1,e:"광고 메시지와 랜딩 헤드라인·가치 제안이 일치하지 않으면 즉시 이탈로 이어집니다."},{q:"GA4 데이터 분석 + UX 라이팅 컨설팅 결합의 강점은?",o:["가격이 싸다","정량(데이터)과 정성(카피)이 함께 작용해 입체적 개선이 가능","자동으로 사이트 수정","광고비 자동 절감"],a:1,e:"수치 기반 문제 발견 + 실제 카피 개선이 결합되어야 실효성 있는 컨설팅이 됩니다."}],
+14:[{q:"다음 중 GA4 기본 채널 그룹이 아닌 것은?",o:["Organic Search","Paid Search","Email","Magic Channel"],a:3,e:"기본 채널 그룹은 Direct, Organic/Paid Search, Organic/Paid Social, Display, Email, Referral, Unassigned 등이 있습니다."},{q:"GA4의 기본 기여 모델은?",o:["마지막 클릭","데이터 기반 (Data-Driven)","선형","첫 클릭"],a:1,e:"GA4는 머신러닝 기반의 데이터 기반 기여 모델을 기본값으로 사용합니다."},{q:"Source = google, Medium = cpc 라면 채널은?",o:["Organic Search","Paid Search","Direct","Referral"],a:1,e:"google + cpc는 Google 유료 검색 광고이므로 Paid Search로 분류됩니다."},{q:"Paid Social 채널의 전환율이 낮을 때 가장 먼저 점검할 것은?",o:["광고 중단","타겟팅·랜딩페이지·크리에이티브 점검","사이트 도메인 변경","GA4 재설치"],a:1,e:"전환이 낮은 이유는 잘못된 타겟·안 맞는 랜딩·약한 크리에이티브 중 하나일 가능성이 큽니다."},{q:"데이터 기반 기여 모델의 특징은?",o:["모든 채널에 균등 분배","첫 접점에 100%","머신러닝이 채널별 가중치 자동 산출","마지막 접점에 100%"],a:2,e:"데이터 기반 모델은 실제 전환 패턴을 학습해 채널별 기여도를 자동 계산합니다."}],
+15:[{q:"결제 단계별 이탈률을 시각화하는 GA4 도구는?",o:["관리자","유입경로 탐색 (Funnel Exploration)","실시간 보고서","광고 보고서"],a:1,e:"유입경로 탐색은 단계별 사용자 흐름과 이탈률을 그래프로 보여줍니다."},{q:"결제 시작 → 완료 단계에서 이탈이 클 때 첫 점검 항목은?",o:["서버 위치","결제 폼 길이·결제 수단·에러 메시지","광고 채널","사이트 색상"],a:1,e:"결제 직전 이탈은 보통 폼 복잡성·결제 옵션 부족·기술적 오류가 원인입니다."},{q:"같은 퍼널을 더 깊이 이해하려면 어떤 분석을 추가?",o:["광고비 증액","세그먼트(기기·신규/재방문·채널)별로 분리해서 비교","이벤트 삭제","사이트 폐쇄"],a:1,e:"전체 퍼널 평균만 보면 안 보이는 패턴이 세그먼트 분리에서 드러납니다."},{q:"퍼널 분석 결과를 광고주에게 전달하는 좋은 표현은?",o:["전환율이 낮습니다","결제 단계 60% 이탈, 모바일 75%로 특히 약함, 폼 단순화 시 +0.6%p 개선 가능성","GA4 더 봐야 함","다음 분기에 다시 보자"],a:1,e:"구체적 수치 + 원인 추정 + 개선 효과 예측까지 포함해야 실행 가능한 인사이트가 됩니다."},{q:"퍼널 이탈 분석에서 '개선 가설' 작성에 꼭 포함될 요소는?",o:["관찰·가설·검증·개선안·성공 지표","비밀번호·이메일·전화번호","회사명·로고·주소","도메인·서버·DB"],a:0,e:"데이터 → 가설 → 검증 → 액션 → 측정의 흐름이 논리적인 개선 가설의 구조입니다."}],
+16:[{q:"GA4에서 자연 검색 키워드를 보려면 어떤 도구를 연동해야 하나요?",o:["Google Ads","Google Search Console","Google Drive","Google Docs"],a:1,e:"Search Console을 연동하면 자연 검색 키워드·노출·CTR을 GA4에서 볼 수 있습니다."},{q:"Google Ads와 GA4 연동의 가장 큰 가치는?",o:["광고비 자동 절감","광고 캠페인-사이트 행동-전환 통합 분석 + GA4 잠재고객을 광고 타겟으로 활용","사이트 디자인 자동 개선","검색 순위 보장"],a:1,e:"광고와 사이트 데이터의 통합으로 ROAS 정확 측정과 잠재고객 기반 정밀 타겟팅이 가능합니다."},{q:"BigQuery 연동의 핵심 장점은?",o:["디자인이 예쁘다","원본 데이터 SQL 분석 + 다른 데이터(CRM 등)와 조인 가능","이메일 자동 발송","전화번호 인증"],a:1,e:"BigQuery는 GA4 원본을 SQL로 자유롭게 다룰 수 있고, 외부 데이터와 결합도 가능합니다."},{q:"Search Console 연동 후 활용할 수 있는 SEO 인사이트는?",o:["키워드 노출↑ + CTR↓ → 메타 타이틀·설명 개선 필요","키워드는 GA4에서 못 본다","광고 키워드만 본다","한국어 키워드는 분석 불가"],a:0,e:"노출은 많은데 클릭이 적다면 검색결과 화면이 매력적이지 않다는 신호입니다."},{q:"GA4 + Google Ads + Search Console 통합 활용의 좋은 예는?",o:["자연 키워드 발굴 + 유료 입찰 비용 비교 + 키워드별 전환율 결합 → 통합 매체 전략","GA4만 보고 결정","Google Ads만 보고 결정","감으로 결정"],a:0,e:"세 도구의 데이터를 결합하면 정교한 키워드별 전략이 가능합니다."}],
+17:[{q:"컨설팅 보고서에서 '발견 사항'을 효과적으로 전달하는 3단 구조는?",o:["데이터 → 해석 → 의미","이름 → 주소 → 전화","과거 → 현재 → 미래","원인 → 결과 → 비용"],a:0,e:"데이터(관찰값) → 해석(가능한 원인) → 의미(비즈니스 임팩트)의 흐름이 가장 잘 전달됩니다."},{q:"컨설팅 보고서 면책 문구에 반드시 포함되어야 할 것은?",o:["광고주 칭찬","분석 범위와 컨설팅 범위(설정 변경·구현 등은 별도) 명시","감사 인사","회사 로고"],a:1,e:"DX팀 역할이 컨설팅·분석·가이드 범위임을 명시하고, 기술 구현은 별도 협업이 필요함을 분명히 해야 합니다."},{q:"개선안 우선순위 결정 시 고려할 두 축은?",o:["나이 × 성별","예상 효과(영향도) × 구현 난이도(시급도)","색상 × 글꼴","도메인 × 호스팅"],a:1,e:"임팩트가 크고 빨리 적용 가능한 'Quick Win'부터 우선순위를 정하는 게 일반적입니다."},{q:"보고서 작성 시 자주 하는 실수가 아닌 것은?",o:["데이터 나열만 하고 액션 없음","전문 용어 남발","벤치마크 없는 평가","구체적 수치와 개선 효과 예측 포함"],a:3,e:"구체적 수치와 개선 효과 예측은 좋은 보고서의 특징입니다."},{q:"광고주에게 가장 효과적인 보고서 산출물 형식 조합은?",o:["전부 구두로","Slack 요약 + Notion 본문 + PDF 발표용 + 핸드오프 체크리스트","이메일 한 줄","전화 통화"],a:1,e:"다양한 형식으로 동일한 인사이트를 전달하면 광고주가 상황에 맞게 활용할 수 있습니다."}]
+};
+
+// State 관리
+const KEY='ga4_study_v1';
+let state={currentChapter:-1,completed:[],theme:'light',quizHistory:[],streak:0,lastQuizDate:null,currentQuiz:null};
+
+function loadState(){try{const s=localStorage.getItem(KEY);if(s)state={...state,...JSON.parse(s)};}catch(e){}document.body.setAttribute('data-theme',state.theme);}
+function saveState(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function pad(n){return String(n).padStart(2,'0');}
+function todayStr(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function ymdStr(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function koreanDate(){const d=new Date();const days=['일','월','화','수','목','금','토'];return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;}
+function getTodayChapter(){const ed=Math.floor(Date.now()/(1000*60*60*24));return ((ed%17)+1);}
+
+// 학습 뷰
+function renderChapterList(filter=''){
+  const list=document.getElementById('chapterList');
+  const stages=[{num:1,title:'Stage 1. 입문',cls:'stage-1'},{num:2,title:'Stage 2. 실무',cls:'stage-2'},{num:3,title:'Stage 3. 컨설팅',cls:'stage-3'}];
+  let html='';
+  stages.forEach(s=>{
+    const cs=CHAPTERS.filter(c=>c.stage===s.num&&(!filter||c.title.toLowerCase().includes(filter.toLowerCase())));
+    if(cs.length===0)return;
+    html+=`<div class="stage-group ${s.cls}"><div class="stage-header"><span class="stage-dot"></span>${s.title}</div>`;
+    cs.forEach(c=>{
+      const idx=CHAPTERS.indexOf(c);
+      const a=state.currentChapter===idx, cp=state.completed.includes(idx);
+      html+=`<div class="chapter-item ${a?'active':''} ${cp?'completed':''}" onclick="loadChapter(${idx})"><div class="chapter-num">${cp?'✓':c.num}</div><div class="chapter-title">${c.title}</div></div>`;
+    });
+    html+=`</div>`;
+  });
+  list.innerHTML=html;
+  const pct=(state.completed.length/CHAPTERS.length)*100;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=`${state.completed.length} / ${CHAPTERS.length}`;
+}
+function filterChapters(){renderChapterList(document.getElementById('chapterSearch').value);}
+function loadChapter(idx){
+  state.currentChapter=idx;
+  const c=CHAPTERS[idx];
+  const bc=`badge-${c.stage}`;
+  const sn=c.stage===1?'입문':c.stage===2?'실무':'컨설팅';
+  const html=`<div class="breadcrumb"><span class="stage-badge ${bc}"><span class="stage-dot" style="width:6px;height:6px;border-radius:50%;background:currentColor"></span> Stage ${c.stage}. ${sn}</span><span>›</span><span>Chapter ${c.num}</span></div><h1>${c.title}</h1><div class="goals"><div class="goals-title">학습 목표</div><ul>${c.goals.map(g=>`<li>${g}</li>`).join('')}</ul></div>${c.body}<div class="action-bar">${idx>0?`<button class="btn" onclick="loadChapter(${idx-1})">← 이전</button>`:''}<button class="btn ${state.completed.includes(idx)?'':'btn-success'}" onclick="toggleComplete(${idx})">${state.completed.includes(idx)?'✓ 학습 완료됨':'✓ 학습 완료 표시'}</button>${idx<CHAPTERS.length-1?`<button class="btn btn-primary" onclick="loadChapter(${idx+1})">다음 →</button>`:''}<button class="btn" onclick="switchTab('quiz');startQuiz(${c.num})">⚡ 이 챕터 퀴즈</button></div>`;
+  document.getElementById('chapterContent').innerHTML=html;
+  window.scrollTo(0,0);
+  saveState();
+  renderChapterList(document.getElementById('chapterSearch').value);
+}
+function toggleComplete(idx){
+  if(state.completed.includes(idx))state.completed=state.completed.filter(i=>i!==idx);
+  else state.completed.push(idx);
+  saveState();loadChapter(idx);
+}
+
+// 퀴즈 뷰
+function renderQuizHome(){
+  const tcn=getTodayChapter();
+  const tc=CHAPTERS.find(c=>c.num===tcn);
+  const ts=todayStr();
+  const dt=state.quizHistory.some(h=>h.date===ts);
+  const tq=state.quizHistory.reduce((s,h)=>s+h.total,0);
+  const tco=state.quizHistory.reduce((s,h)=>s+h.score,0);
+  const acc=tq>0?Math.round((tco/tq)*100):0;
+  document.getElementById('quizView').innerHTML=`<div class="quiz-home"><div class="quiz-card"><div class="quiz-date">${koreanDate()}</div><div class="quiz-greeting">오늘의 5분 학습 ⚡</div>${state.streak>0?`<div class="quiz-streak">🔥 연속 ${state.streak}일</div>`:''}<div class="quiz-today-info"><div class="quiz-today-label">오늘의 챕터</div><div class="quiz-today-chapter">Ch.${tc.num} ${tc.title}</div></div><div class="quiz-stats"><div class="stat-card"><div class="stat-num">${state.quizHistory.length}</div><div class="stat-label">완료한 세트</div></div><div class="stat-card"><div class="stat-num">${acc}%</div><div class="stat-label">평균 정답률</div></div><div class="stat-card"><div class="stat-num">${state.streak}</div><div class="stat-label">연속 학습일</div></div></div>${dt?`<div style="text-align:center;padding:20px;background:var(--success-soft);color:var(--success);border-radius:var(--r);font-weight:500">✓ 오늘의 퀴즈 완료! 내일 또 만나요</div><div class="action-bar" style="border:none;padding:0;margin-top:16px"><button class="btn" onclick="startQuiz(${tcn})" style="width:100%">한 번 더 풀기</button></div>`:`<button class="btn btn-primary" onclick="startQuiz(${tcn})" style="width:100%;padding:14px;font-size:15px;margin-top:8px">오늘의 5문제 시작하기 →</button>`}<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)"><div style="font-size:12px;color:var(--text-3);margin-bottom:10px">다른 챕터 풀기</div><div style="display:flex;flex-wrap:wrap;gap:6px">${CHAPTERS.map(c=>`<button class="btn" style="padding:5px 10px;font-size:12px" onclick="startQuiz(${c.num})">Ch.${c.num}</button>`).join('')}</div></div></div></div>`;
+}
+function startQuiz(cn){
+  const qs=QUIZZES[cn];
+  if(!qs){alert('해당 챕터 퀴즈가 없습니다.');return;}
+  state.currentQuiz={chapterNum:cn,questions:qs.map((q,i)=>({...q,idx:i})),current:0,answers:[]};
+  renderQuizQuestion();
+}
+function renderQuizQuestion(){
+  const q=state.currentQuiz, cur=q.questions[q.current], chap=CHAPTERS.find(c=>c.num===q.chapterNum);
+  let pb='';
+  for(let i=0;i<q.questions.length;i++){
+    let cls='quiz-progress-bar';
+    if(i<q.answers.length)cls+=q.answers[i].correct?' correct':' wrong';
+    else if(i===q.current)cls+=' active';
+    pb+=`<div class="${cls}"></div>`;
+  }
+  document.getElementById('quizView').innerHTML=`<div class="quiz-home"><div class="quiz-card"><div style="font-size:12px;color:var(--text-3);margin-bottom:12px">Ch.${chap.num} ${chap.title}</div><div class="quiz-progress">${pb}</div><div class="quiz-q-num">문제 ${q.current+1} / ${q.questions.length}</div><div class="quiz-q-text">${cur.q}</div><div class="quiz-options" id="quizOptions">${cur.o.map((opt,i)=>`<button class="quiz-option" onclick="answerQuiz(${i})"><span class="quiz-option-letter">${String.fromCharCode(65+i)}</span><span>${opt}</span></button>`).join('')}</div><div id="quizExplanation"></div></div></div>`;
+  window.scrollTo(0,0);
+}
+function answerQuiz(chosen){
+  const q=state.currentQuiz, cur=q.questions[q.current], correct=chosen===cur.a;
+  q.answers.push({chosen,correct,qIdx:q.current});
+  const opts=document.querySelectorAll('.quiz-option');
+  opts.forEach((el,i)=>{
+    el.disabled=true;
+    if(i===cur.a)el.classList.add('correct');
+    if(i===chosen&&!correct)el.classList.add('wrong');
+    el.onclick=null;
+  });
+  document.getElementById('quizExplanation').innerHTML=`<div class="quiz-explanation"><div class="quiz-explanation-title">💡 해설</div><div>${cur.e}</div></div><div class="action-bar" style="margin-top:20px;padding:0;border:none"><button class="btn btn-primary" onclick="nextQuiz()" style="width:100%">${q.current<q.questions.length-1?'다음 문제 →':'결과 보기 →'}</button></div>`;
+  const bars=document.querySelectorAll('.quiz-progress-bar');
+  bars[q.current].classList.remove('active');
+  bars[q.current].classList.add(correct?'correct':'wrong');
+}
+function nextQuiz(){
+  const q=state.currentQuiz;
+  if(q.current<q.questions.length-1){q.current++;renderQuizQuestion();}
+  else finishQuiz();
+}
+function finishQuiz(){
+  const q=state.currentQuiz, score=q.answers.filter(a=>a.correct).length, total=q.questions.length, ts=todayStr();
+  state.quizHistory.push({date:ts,score,total,chapterNum:q.chapterNum,wrong:q.answers.filter(a=>!a.correct).map(a=>a.qIdx)});
+  if(state.lastQuizDate!==ts){
+    const y=new Date();y.setDate(y.getDate()-1);
+    const ys=ymdStr(y);
+    if(state.lastQuizDate===ys)state.streak+=1;
+    else state.streak=1;
+    state.lastQuizDate=ts;
+  }
+  saveState();
+  renderQuizResult(q,score,total);
+}
+function renderQuizResult(q,score,total){
+  const chap=CHAPTERS.find(c=>c.num===q.chapterNum);
+  let comment='';
+  const pct=score/total;
+  if(pct===1)comment='🏆 만점! 이 챕터 완벽하게 이해하셨어요';
+  else if(pct>=0.8)comment='👍 훌륭해요! 거의 다 맞히셨네요';
+  else if(pct>=0.6)comment='💪 좋아요! 틀린 부분 한 번 더 보면 완벽';
+  else comment='📚 챕터를 한 번 더 보고 다시 도전해보세요';
+  let rh='';
+  q.answers.forEach((a,i)=>{
+    const cur=q.questions[i];
+    if(a.correct){
+      rh+=`<div class="review-item"><span class="review-icon">✅</span><div><strong>Q${i+1}.</strong> ${cur.q}</div></div>`;
+    }else{
+      rh+=`<div class="review-item" style="background:var(--danger-soft)"><span class="review-icon">❌</span><div><div style="margin-bottom:6px"><strong>Q${i+1}.</strong> ${cur.q}</div><div style="font-size:12px;color:var(--text-3)">정답: ${cur.o[cur.a]}</div><div style="font-size:12px;color:var(--text-2);margin-top:4px">${cur.e}</div></div></div>`;
+    }
+  });
+  document.getElementById('quizView').innerHTML=`<div class="quiz-home"><div class="quiz-card"><div class="quiz-result-score"><div class="score-num">${score}/${total}</div><div class="score-label" style="margin-top:8px">${comment}</div></div><div style="text-align:center;padding:14px;background:var(--surface-2);border-radius:var(--r);margin:20px 0"><div style="font-size:12px;color:var(--text-3)">학습 챕터</div><div style="font-weight:600;margin-top:2px">Ch.${chap.num} ${chap.title}</div></div><h3 style="margin:20px 0 12px;font-size:14px;color:var(--text-2)">📝 리뷰</h3><div class="review-list">${rh}</div><div class="action-bar" style="border:none;padding:0;margin-top:24px"><button class="btn" onclick="renderQuizHome()">홈으로</button><button class="btn btn-primary" onclick="switchTab('learn');loadChapter(${CHAPTERS.indexOf(chap)})" style="flex:1">📚 챕터 다시 보기</button></div></div></div>`;
+  window.scrollTo(0,0);
+}
+
+// 통계 뷰
+function renderStatsView(){
+  const tq=state.quizHistory.reduce((s,h)=>s+h.total,0);
+  const tco=state.quizHistory.reduce((s,h)=>s+h.score,0);
+  const acc=tq>0?Math.round((tco/tq)*100):0;
+  // 최근 7일
+  const last7=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=ymdStr(d);
+    const has=state.quizHistory.some(h=>h.date===ds);
+    last7.push({date:d,studied:has});
+  }
+  // 약점 챕터 분석
+  const chapStats={};
+  state.quizHistory.forEach(h=>{
+    if(!chapStats[h.chapterNum])chapStats[h.chapterNum]={total:0,wrong:0};
+    chapStats[h.chapterNum].total+=h.total;
+    chapStats[h.chapterNum].wrong+=h.wrong.length;
+  });
+  const weak=Object.entries(chapStats).map(([cn,s])=>({cn:Number(cn),rate:s.total>0?(s.wrong/s.total)*100:0,total:s.total})).filter(x=>x.total>=2&&x.rate>0).sort((a,b)=>b.rate-a.rate).slice(0,3);
+  const days=['일','월','화','수','목','금','토'];
+  document.getElementById('statsView').innerHTML=`<div class="stats-view"><h1 style="margin-bottom:8px">📊 학습 기록</h1><p style="color:var(--text-3);font-size:13px;margin-bottom:24px">총 ${state.quizHistory.length}회의 퀴즈 데이터를 기반으로 분석</p><div class="stats-grid"><div class="big-stat"><div class="big-stat-num">${state.streak}<span style="font-size:14px;color:var(--text-3);margin-left:4px">일</span></div><div class="big-stat-label">🔥 연속 학습일</div></div><div class="big-stat"><div class="big-stat-num">${state.completed.length}<span style="font-size:14px;color:var(--text-3);margin-left:4px">/ 17</span></div><div class="big-stat-label">✓ 학습 완료 챕터</div></div><div class="big-stat"><div class="big-stat-num">${acc}<span style="font-size:14px;color:var(--text-3);margin-left:4px">%</span></div><div class="big-stat-label">📝 평균 정답률</div></div><div class="big-stat"><div class="big-stat-num">${state.quizHistory.length}</div><div class="big-stat-label">⚡ 풀이 세트 수</div></div></div><div class="section-title">최근 7일</div><div class="recent-days">${last7.map(d=>`<div class="day-cell ${d.studied?'studied':''}">${d.studied?'<strong>✓</strong>':''}<div>${days[d.date.getDay()]}</div><div>${d.date.getDate()}</div></div>`).join('')}</div><div class="section-title">약점 챕터 Top 3</div>${weak.length>0?`<div class="weak-list">${weak.map(w=>{const c=CHAPTERS.find(x=>x.num===w.cn);return `<div class="weak-item" onclick="switchTab('learn');loadChapter(${CHAPTERS.indexOf(c)})"><div><strong>Ch.${c.num}</strong> ${c.title}</div><div class="weak-rate">오답률 ${Math.round(w.rate)}%</div></div>`;}).join('')}</div>`:`<div class="empty-state">아직 약점 분석을 위한 데이터가 부족해요. 챕터별로 2회 이상 풀어보세요.</div>`}<div class="section-title">최근 풀이 기록</div>${state.quizHistory.length>0?`<div class="weak-list">${state.quizHistory.slice(-10).reverse().map(h=>{const c=CHAPTERS.find(x=>x.num===h.chapterNum);return `<div class="weak-item"><div><strong>${h.date}</strong> · Ch.${c.num} ${c.title}</div><div style="font-weight:600;color:${h.score===h.total?'var(--success)':h.score>=h.total*0.6?'var(--warning)':'var(--danger)'}">${h.score}/${h.total}</div></div>`;}).join('')}</div>`:`<div class="empty-state">아직 푼 퀴즈가 없어요. ⚡ 퀴즈 탭에서 시작해보세요!</div>`}<div style="margin-top:32px;padding:14px;background:var(--surface-2);border-radius:var(--r);font-size:12px;color:var(--text-3);line-height:1.6">💡 <strong>데이터 보관 안내</strong><br>학습 진도와 퀴즈 기록은 사용 중인 브라우저에 저장됩니다. 같은 기기·같은 브라우저에서는 매일 누적되며, 시크릿 모드나 다른 기기에서는 공유되지 않습니다. iOS Safari는 7일 이상 미사용 시 자동 삭제될 수 있어요.</div></div>`;
+}
+
+// 탭 전환
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  document.getElementById('learnView').style.display=tab==='learn'?'flex':'none';
+  document.getElementById('quizView').style.display=tab==='quiz'?'block':'none';
+  document.getElementById('statsView').style.display=tab==='stats'?'block':'none';
+  if(tab==='quiz')renderQuizHome();
+  if(tab==='stats')renderStatsView();
+}
+
+function toggleTheme(){
+  state.theme=state.theme==='light'?'dark':'light';
+  document.body.setAttribute('data-theme',state.theme);
+  saveState();
+}
+
+// 초기화
+loadState();
+renderChapterList();
+if(state.currentChapter>=0)loadChapter(state.currentChapter);
+</script>
+</body>
+</html>
